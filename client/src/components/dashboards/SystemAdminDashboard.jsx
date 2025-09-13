@@ -13,6 +13,7 @@ const SystemAdminDashboard = () => {
   const [stats, setStats] = useState({ usersCount: 0, storesCount: 0, ratingsCount: 0 });
   const [loadingStats, setLoadingStats] = useState(true);
   const [errorStats, setErrorStats] = useState(null);
+  const [recentRatings, setRecentRatings] = useState([]);
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
@@ -29,6 +30,15 @@ const SystemAdminDashboard = () => {
         setErrorStats(err.response?.data?.message || 'Failed to fetch stats');
       })
       .finally(() => setLoadingStats(false));
+
+    // Fetch recent ratings (latest 3)
+    api.get('/ratings/recent?limit=3')
+      .then(res => {
+        setRecentRatings(res.data.data || []);
+      })
+      .catch(err => {
+        setRecentRatings([]);
+      });
   }, []);
 
   return (
@@ -243,6 +253,29 @@ const SystemAdminDashboard = () => {
                   <p className="text-xs text-gray-500">2 minutes ago</p>
                 </div>
               </div>
+              {/* Recent Ratings */}
+              {recentRatings.length > 0 && recentRatings.map((rating, idx) => (
+                <div key={rating.id || idx} className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-2 h-2 bg-yellow-400 rounded-full mt-2"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-semibold">{rating.user?.name || 'Unknown User'}</span> rated <span className="font-semibold">{rating.store?.name || 'Unknown Store'}</span> <span className="text-yellow-600 font-bold">{rating.value || rating.rating}★</span>
+                      {rating.comment && (
+                        <span className="ml-2 text-gray-500 italic">"{rating.comment}"</span>
+                      )}
+                    </p>
+                    <p className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+              {recentRatings.length === 0 && (
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-2 h-2 bg-gray-300 rounded-full mt-2"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-500">No recent ratings found.</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

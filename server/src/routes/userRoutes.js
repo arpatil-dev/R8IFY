@@ -21,7 +21,7 @@ router.post("/", authenticate, authorize(['SYSTEM_ADMINISTRATOR']),createUser );
 router.put("/password", authenticate, authorize(['NORMAL_USER', 'SYSTEM_ADMINISTRATOR', 'STORE_OWNER']), updatePassword); // Update password
 router.put("/profile", authenticate, authorize(['NORMAL_USER', 'SYSTEM_ADMINISTRATOR', 'STORE_OWNER']), updateProfile); // Update own profile
 
-router.put("/:id", authenticate, authorize(['SYSTEM_ADMINISTRATOR','NORMAL_USER']), updateUser); // Update user by ID
+router.put("/:id", authenticate, authorize(['SYSTEM_ADMINISTRATOR','NORMAL_USER','STORE_OWNER']), updateUser); // Update user by ID
 router.delete("/:id", authenticate, authorize(['SYSTEM_ADMINISTRATOR']), deleteUser); // Delete user by ID
 router.get("/:id", authenticate, authorize(['SYSTEM_ADMINISTRATOR']), getUserById); // Get user by ID (if needed)
 
