@@ -7,13 +7,16 @@ const StoreList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [userRatings, setUserRatings] = useState({}); // Store user's ratings by storeId
   const [selectedStore, setSelectedStore] = useState(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [existingRating, setExistingRating] = useState(null); // Current user's rating for selected store
 
   useEffect(() => {
     fetchStores();
+    fetchUserRatings();
   }, []);
 
   useEffect(() => {
@@ -73,20 +76,59 @@ const StoreList = () => {
     }
   };
 
+  const fetchUserRatings = async () => {
+    try {
+      const userData = localStorage.getItem('userData');
+      if (!userData) return;
+      
+      const user = JSON.parse(userData);
+      const response = await api.get(`/ratings/user/${user.id}`);
+      console.log('User ratings response:', response);
+      
+      const ratingsData = response.data?.data || response.data || [];
+      const ratingsMap = {};
+      
+      // Create a map of storeId -> rating for quick lookup
+      ratingsData.forEach(rating => {
+        console.log(rating.storeId)
+        ratingsMap[rating.storeId] = rating; // Store the complete rating object, not just rating.value
+      });
+      
+      setUserRatings(ratingsMap);
+    } catch (error) {
+      console.error('Error fetching user ratings:', error);
+      // Don't show error for ratings as it's not critical for the main functionality
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   const openRatingModal = (store) => {
     setSelectedStore(store);
-    setRating(0);
-    setComment('');
+    
+    // Check if user has already rated this store
+    const userRating = userRatings[store.id];
+    console.log("Rating it is : ",userRating)
+    if (userRating) {
+      // Pre-populate with existing rating
+      setExistingRating(userRating);
+      setRating(userRating.value || userRating.rating); // Handle both possible property names
+      setComment(userRating.comment || '');
+    } else {
+      // New rating
+      setExistingRating(null);
+      setRating(0);
+      setComment('');
+    }
   };
 
   const closeRatingModal = () => {
     setSelectedStore(null);
     setRating(0);
     setComment('');
+    setExistingRating(null);
   };
 
   const submitRating = async (e) => {
@@ -95,20 +137,36 @@ const StoreList = () => {
 
     try {
       setSubmitLoading(true);
-      const response = await api.post(`/stores/${selectedStore.id}/ratings`, {
-        rating: rating,
-        comment: comment.trim()
-      });
       
-      console.log('Rating submitted:', response);
-      alert('Rating submitted successfully!');
+      let response;
+      console.log(selectedStore)
+      if (existingRating) {
+        // Update existing rating using PUT endpoint
+        response = await api.put(`/ratings/${existingRating.id}`, {
+          rating: rating,
+          comment: comment.trim()
+        });
+        console.log('Rating updated:', response);
+        alert('Rating updated successfully!');
+      } else {
+        // Create new rating using POST endpoint
+        response = await api.post(`/stores/${selectedStore.id}/ratings`, {
+          rating: rating,
+          comment: comment.trim()
+        });
+        console.log('Rating submitted:', response);
+        alert('Rating submitted successfully!');
+      }
+      
       closeRatingModal();
       
-      // Refresh stores to get updated ratings
+      // Refresh both stores (to get updated averages) and user ratings
       fetchStores();
+      fetchUserRatings();
     } catch (error) {
-      console.error('Error submitting rating:', error);
-      alert(error.response?.data?.message || 'Failed to submit rating. Please try again.');
+      console.error('Error with rating:', error);
+      const action = existingRating ? 'update' : 'submit';
+      alert(error.response?.data?.message || `Failed to ${action} rating. Please try again.`);
     } finally {
       setSubmitLoading(false);
     }
@@ -147,7 +205,10 @@ const StoreList = () => {
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-lg font-semibold text-gray-900">All Stores</h3>
         <button
-          onClick={fetchStores}
+          onClick={() => {
+            fetchStores();
+            fetchUserRatings();
+          }}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
         >
           Refresh
@@ -217,11 +278,37 @@ const StoreList = () => {
                 )}
               </div>
 
+              {/* User's Rating Status */}
+              {userRatings[store.id] && (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-2 mb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <span className="text-sm text-blue-700 mr-2">Your rating:</span>
+                      <div className="flex">
+                        {renderStars(userRatings[store.id].value || userRatings[store.id].rating)}
+                      </div>
+                    </div>
+                    <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                      {userRatings[store.id].value || userRatings[store.id].rating}/5
+                    </span>
+                  </div>
+                  {userRatings[store.id].comment && (
+                    <p className="text-sm text-blue-600 mt-1 italic">
+                      "{userRatings[store.id].comment}"
+                    </p>
+                  )}
+                </div>
+              )}
+
               <button
                 onClick={() => openRatingModal(store)}
-                className="w-full mt-3 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-200"
+                className={`w-full mt-3 py-2 px-4 rounded-md transition duration-200 ${
+                  userRatings[store.id]
+                    ? 'bg-orange-600 text-white hover:bg-orange-700'
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
               >
-                Rate This Store
+                {userRatings[store.id] ? 'Edit Your Rating' : 'Rate This Store'}
               </button>
             </div>
           ))}
@@ -232,7 +319,23 @@ const StoreList = () => {
       {selectedStore && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h4 className="text-lg font-semibold mb-4">Rate {selectedStore.name}</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {existingRating ? 'Edit Your Rating for' : 'Rate'} {selectedStore.name}
+            </h4>
+            
+            {existingRating && (
+              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-sm text-yellow-800">
+                  <strong>Current Rating:</strong> {existingRating.value || existingRating.rating} star{(existingRating.value || existingRating.rating) !== 1 ? 's' : ''}
+                  {existingRating.comment && (
+                    <span> - "{existingRating.comment}"</span>
+                  )}
+                </p>
+                <p className="text-xs text-yellow-600 mt-1">
+                  You can update your rating and comment below.
+                </p>
+              </div>
+            )}
             
             <form onSubmit={submitRating}>
               <div className="mb-4">
@@ -270,7 +373,10 @@ const StoreList = () => {
                   disabled={rating === 0 || submitLoading}
                   className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
                 >
-                  {submitLoading ? 'Submitting...' : 'Submit Rating'}
+                  {submitLoading 
+                    ? (existingRating ? 'Updating...' : 'Submitting...') 
+                    : (existingRating ? 'Update Rating' : 'Submit Rating')
+                  }
                 </button>
               </div>
             </form>
