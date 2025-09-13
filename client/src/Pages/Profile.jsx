@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../utils/api';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,18 +15,44 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    // Get user data from localStorage
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-      setFormData({
-        name: parsedUser.name || '',
-        email: parsedUser.email || '',
-        address: parsedUser.address || '',
-      });
-    }
+    fetchUserProfile();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/users/me');
+      console.log('Profile response:', response);
+      
+      const userData = response.data?.data || response.data;
+      setUser(userData);
+      setFormData({
+        name: userData.name || '',
+        email: userData.email || '',
+        address: userData.address || '',
+      });
+      
+      // Also update localStorage to keep it in sync
+      localStorage.setItem('userData', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setError('Failed to load profile data');
+      
+      // Fallback to localStorage if API fails
+      const localUserData = localStorage.getItem('userData');
+      if (localUserData) {
+        const parsedUser = JSON.parse(localUserData);
+        setUser(parsedUser);
+        setFormData({
+          name: parsedUser.name || '',
+          email: parsedUser.email || '',
+          address: parsedUser.address || '',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -31,12 +61,45 @@ const Profile = () => {
     });
   };
 
-  const handleSave = () => {
-    // Update user data in localStorage (in a real app, you'd make an API call)
-    const updatedUser = { ...user, ...formData };
-    localStorage.setItem('userData', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Validate required fields
+      if (!formData.name.trim()) {
+        setError('Name is required');
+        return;
+      }
+      
+      if (!formData.email.trim()) {
+        setError('Email is required');
+        return;
+      }
+
+      const response = await api.put('/users/profile', {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        address: formData.address.trim(),
+      });
+      
+      console.log('Profile update response:', response);
+      
+      const updatedUser = response.data?.data || response.data;
+      setUser(updatedUser);
+      
+      // Update localStorage to keep it in sync
+      localStorage.setItem('userData', JSON.stringify(updatedUser));
+      
+      setSuccess('Profile updated successfully!');
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setError(error.response?.data?.message || 'Failed to update profile. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -47,13 +110,18 @@ const Profile = () => {
       address: user.address || '',
     });
     setIsEditing(false);
+    setError('');
+    setSuccess('');
   };
 
-  if (!user) {
+  if (!user || loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
-          <p className="text-gray-600">Loading user profile...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2">
+            {loading ? 'Loading profile...' : 'Loading user profile...'}
+          </p>
         </div>
       </div>
     );
@@ -81,13 +149,15 @@ const Profile = () => {
               <div className="space-x-2">
                 <button
                   onClick={handleSave}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+                  disabled={loading}
+                  className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Save
+                  {loading ? 'Saving...' : 'Save'}
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors"
+                  disabled={loading}
+                  className="bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Cancel
                 </button>
@@ -96,11 +166,24 @@ const Profile = () => {
           </div>
         </div>
 
+        {/* Error and Success Messages */}
+        {error && (
+          <div className="mx-6 mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+        
+        {success && (
+          <div className="mx-6 mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+            {success}
+          </div>
+        )}
+
         <div className="px-6 py-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
+                Name <span className="text-red-500">*</span>
               </label>
               {isEditing ? (
                 <input
@@ -108,16 +191,18 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your name"
                 />
               ) : (
-                <p className="text-gray-900 py-2">{user.name}</p>
+                <p className="text-gray-900 py-2">{user.name || 'Not provided'}</p>
               )}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                Email <span className="text-red-500">*</span>
               </label>
               {isEditing ? (
                 <input
@@ -125,10 +210,12 @@ const Profile = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your email"
                 />
               ) : (
-                <p className="text-gray-900 py-2">{user.email}</p>
+                <p className="text-gray-900 py-2">{user.email || 'Not provided'}</p>
               )}
             </div>
 
@@ -143,9 +230,10 @@ const Profile = () => {
                   onChange={handleInputChange}
                   rows="3"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                  placeholder="Enter your address (optional)"
                 />
               ) : (
-                <p className="text-gray-900 py-2">{user.address}</p>
+                <p className="text-gray-900 py-2">{user.address || 'Not provided'}</p>
               )}
             </div>
 
