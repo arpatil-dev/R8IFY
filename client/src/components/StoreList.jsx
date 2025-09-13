@@ -36,8 +36,35 @@ const StoreList = () => {
       console.log('Stores response:', response);
       
       const storesData = response.data.data?.stores || response.data.data || [];
-      setStores(storesData);
-      setFilteredStores(storesData);
+      
+      // Fetch average rating for each store
+      const storesWithRatings = await Promise.all(
+        storesData.map(async (store) => {
+          try {
+            const ratingResponse = await api.get(`/stores/${store.id}/average-rating`);
+            console.log(`Rating for store ${store.id}:`, ratingResponse);
+            
+            const averageRating = ratingResponse.data?.averageRating || ratingResponse.data?.data?.averageRating || 0;
+            const totalRatings = ratingResponse.data?.totalRatings || ratingResponse.data?.data?.totalRatings || 0;
+            
+            return {
+              ...store,
+              averageRating: averageRating,
+              totalRatings: totalRatings
+            };
+          } catch (error) {
+            console.error(`Error fetching rating for store ${store.id}:`, error);
+            return {
+              ...store,
+              averageRating: 0,
+              totalRatings: 0
+            };
+          }
+        })
+      );
+      
+      setStores(storesWithRatings);
+      setFilteredStores(storesWithRatings);
     } catch (error) {
       console.error('Error fetching stores:', error);
       setError('Failed to load stores. Please try again.');
@@ -171,16 +198,24 @@ const StoreList = () => {
               )}
 
               {/* Average Rating Display */}
-              {store.averageRating && (
-                <div className="flex items-center mb-3">
+              <div className="flex items-center justify-between mb-3 p-2 bg-gray-50 rounded-md">
+                <div className="flex items-center">
                   <div className="flex mr-2">
-                    {renderStars(Math.round(store.averageRating))}
+                    {renderStars(Math.round(store.averageRating || 0))}
                   </div>
                   <span className="text-sm text-gray-600">
-                    ({store.averageRating.toFixed(1)} avg)
+                    {store.averageRating > 0 
+                      ? `${store.averageRating.toFixed(1)} avg` 
+                      : 'No ratings yet'
+                    }
                   </span>
                 </div>
-              )}
+                {store.totalRatings > 0 && (
+                  <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
+                    {store.totalRatings} review{store.totalRatings !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
 
               <button
                 onClick={() => openRatingModal(store)}
