@@ -31,13 +31,12 @@ const Login = ({ onSwitchToRegister }) => {
       // Handle different possible response structures
       let userData = null;
       let token = null;
+        
       
-      // Check if response has user data directly
-      console.log(response.data.user)
-      if (response.data.user) {
-        userData = response.data.user;
-        token = response.token;
-      } else if (response.data.id || response.data.email) {
+      if (response.data.data.user) {
+        userData = response.data.data.user;
+        token = response.data.data.token;
+      } else if (response.data.data.id || response.data.data.email) {
         // Response might contain user data directly
         userData = response;
       }
