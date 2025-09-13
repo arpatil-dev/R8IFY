@@ -3,6 +3,7 @@ import {
   getProfileService,
   deleteUserService,
   updateUserService,
+  updateProfileService,
   getUsersService,
   getUserByIdService
 } from "../services/userService.js";
@@ -100,6 +101,43 @@ export const getUsers = async (req, res) => {
     return handleResponse(res, users, "Success", 200, null);
   } catch (error) {
     return handleResponse(res, null, "Failed", 500, error.message);
+  }
+};
+
+// Controller for updating own profile (Normal users)
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get user ID from authenticated user
+    const { name, email, address } = req.body;
+    
+    // Validate at least one field is provided
+    if (!name && !email && !address) {
+      return handleResponse(
+        res,
+        null,
+        "At least one field (name, email, or address) must be provided",
+        400,
+        "Validation Error"
+      );
+    }
+
+    const updatedUser = await updateProfileService(userId, { name, email, address });
+    
+    return handleResponse(
+      res,
+      updatedUser,
+      "Profile updated successfully",
+      200,
+      null
+    );
+  } catch (err) {
+    return handleResponse(
+      res,
+      null,
+      err.message || "Failed to update profile",
+      400,
+      "Error"
+    );
   }
 };
 

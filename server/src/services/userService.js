@@ -69,6 +69,56 @@ export async function updateUserService(userId, updatedData) {
       createdAt: true,
     },
   });
+  
+  return user; // Added missing return statement
+}
+
+// ✅ Update user profile (for normal users - excludes role updates)
+export async function updateProfileService(userId, profileData) {
+  // Only allow updating specific fields, exclude role and password
+  const allowedFields = {
+    name: profileData.name,
+    email: profileData.email,
+    address: profileData.address
+  };
+
+  // Remove undefined fields
+  Object.keys(allowedFields).forEach(key => 
+    allowedFields[key] === undefined && delete allowedFields[key]
+  );
+
+  if (Object.keys(allowedFields).length === 0) {
+    throw new Error("No valid fields to update");
+  }
+
+  // Check if email is being updated and if it's already taken
+  if (allowedFields.email) {
+    const existingUser = await prisma.user.findFirst({
+      where: { 
+        email: allowedFields.email,
+        NOT: { id: userId }
+      }
+    });
+    
+    if (existingUser) {
+      throw new Error("Email is already taken by another user");
+    }
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: allowedFields,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      address: true,
+      role: true,
+      createdAt: true,
+    },
+  });
+
+  return updatedUser;
 }
 
 // ✅ Delete user by ID (Admin only)

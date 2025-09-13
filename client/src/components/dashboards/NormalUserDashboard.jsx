@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PasswordChange from '../PasswordChange';
 import StoreList from '../StoreList';
 
@@ -70,11 +71,14 @@ const NormalUserDashboard = () => {
                   <div className="text-sm text-green-600">Update your password</div>
                 </button>
 
-                <div className="p-4 text-center bg-gray-50 rounded-lg">
+                <Link
+                  to="/my-ratings"
+                  className="p-4 text-center bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200 block"
+                >
                   <div className="text-2xl mb-2">⭐</div>
-                  <div className="font-semibold text-gray-900">My Ratings</div>
-                  <div className="text-sm text-gray-600">Coming soon</div>
-                </div>
+                  <div className="font-semibold text-purple-900">My Ratings</div>
+                  <div className="text-sm text-purple-600">View all your reviews</div>
+                </Link>
               </div>
             </div>
 

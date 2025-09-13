@@ -56,32 +56,41 @@ const Layout = ({ children }) => {
                 </Link>
               </div>
 
-              {/* Navigation Links */}
-              <nav className="hidden md:flex space-x-8">
-                {isAuthenticated ? (
-                  <>
-                    <Link
-                      to="/dashboard"
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      to="/profile"
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                    >
-                      Profile
-                    </Link>
-                  </>
-                ) : (
+              {/* Navigation Menu */}
+              {isAuthenticated && user && (
+                <nav className="hidden md:flex space-x-6">
                   <Link
-                    to="/auth"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    to="/dashboard"
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      location.pathname === '/dashboard'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                    }`}
                   >
-                    Login / Register
+                    Dashboard
                   </Link>
-                )}
-              </nav>
+                  <Link
+                    to="/my-ratings"
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      location.pathname === '/my-ratings'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    My Ratings
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      location.pathname === '/profile'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    Profile
+                  </Link>
+                </nav>
+              )}
 
               {/* User Menu */}
               <div className="flex items-center space-x-4">

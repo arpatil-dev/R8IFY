@@ -5,6 +5,7 @@ import AuthPage from './Pages/AuthPage'
 import Home from './Pages/Home'
 import Dashboard from './Pages/Dashboard'
 import Profile from './Pages/Profile'
+import MyRatings from './Pages/MyRatings'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -30,6 +31,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-ratings" 
+            element={
+              <ProtectedRoute>
+                <MyRatings />
               </ProtectedRoute>
             } 
           />
