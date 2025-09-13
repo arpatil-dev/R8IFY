@@ -2,15 +2,15 @@ import prisma from "../config/db.js";
 import bcrypt from "bcryptjs";
 // Create User
 export const createUser = async (data) => {
-  const { name, email, password, address, role } = data;
-  const hashedPassword = await bcrypt.hash(password, 12);
+  const { name, email, address, role } = data;
+  const hashedPassword = await bcrypt.hash("changeme", 12);
   console.log(data);
   if (!["NORMAL_USER", "STORE_OWNER", "SYSTEM_ADMINISTRATOR"].includes(role)) {
     throw new Error("Invalid role");
   }
 
   return prisma.user.create({
-    data: { name, email, password:hashedPassword, address, role },
+    data: { name, email, password:hashedPassword, address, role ,isFirstLogin: true,},
   });
 };
 

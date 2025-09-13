@@ -1,14 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AddUserModal from '../admin/AddUserModal';
+import AddStoreModal from '../admin/AddStoreModal';
+import api from '../../utils/api';
 
 const SystemAdminDashboard = () => {
   const [user, setUser] = useState(null);
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [showAddStore, setShowAddStore] = useState(false);
+  const [stats, setStats] = useState({ usersCount: 0, storesCount: 0, ratingsCount: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [errorStats, setErrorStats] = useState(null);
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       setUser(JSON.parse(userData));
     }
+    // Fetch dashboard stats
+    api.get('/admin/stats')
+      .then(res => {
+        setStats(res.data.data || { usersCount: 0, storesCount: 0, ratingsCount: 0 });
+        setErrorStats(null);
+      })
+      .catch(err => {
+        setErrorStats(err.response?.data?.message || 'Failed to fetch stats');
+      })
+      .finally(() => setLoadingStats(false));
   }, []);
 
   return (
@@ -59,7 +77,7 @@ const SystemAdminDashboard = () => {
             <div className="ml-5 w-0 flex-1">
               <dl>
                 <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                <dd className="text-lg font-medium text-gray-900">0</dd>
+                <dd className="text-lg font-medium text-gray-900">{loadingStats ? '...' : errorStats ? '!' : stats.usersCount}</dd>
               </dl>
             </div>
           </div>
@@ -76,7 +94,7 @@ const SystemAdminDashboard = () => {
             <div className="ml-5 w-0 flex-1">
               <dl>
                 <dt className="text-sm font-medium text-gray-500 truncate">Total Stores</dt>
-                <dd className="text-lg font-medium text-gray-900">0</dd>
+                <dd className="text-lg font-medium text-gray-900">{loadingStats ? '...' : errorStats ? '!' : stats.storesCount}</dd>
               </dl>
             </div>
           </div>
@@ -93,7 +111,7 @@ const SystemAdminDashboard = () => {
             <div className="ml-5 w-0 flex-1">
               <dl>
                 <dt className="text-sm font-medium text-gray-500 truncate">Total Reviews</dt>
-                <dd className="text-lg font-medium text-gray-900">0</dd>
+                <dd className="text-lg font-medium text-gray-900">{loadingStats ? '...' : errorStats ? '!' : stats.ratingsCount}</dd>
               </dl>
             </div>
           </div>
@@ -125,7 +143,10 @@ const SystemAdminDashboard = () => {
             <button className="w-full bg-blue-50 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-100 transition-colors text-left">
               View All Users
             </button>
-            <button className="w-full bg-green-50 text-green-700 px-4 py-2 rounded-md hover:bg-green-100 transition-colors text-left">
+            <button
+              className="w-full bg-green-50 text-green-700 px-4 py-2 rounded-md hover:bg-green-100 transition-colors text-left"
+              onClick={() => setShowAddUser(true)}
+            >
               Create New User
             </button>
             <button className="w-full bg-red-50 text-red-700 px-4 py-2 rounded-md hover:bg-red-100 transition-colors text-left">
@@ -142,6 +163,12 @@ const SystemAdminDashboard = () => {
           <div className="space-y-3">
             <button className="w-full bg-teal-50 text-teal-700 px-4 py-2 rounded-md hover:bg-teal-100 transition-colors text-left">
               View All Stores
+            </button>
+            <button
+              className="w-full bg-green-50 text-green-700 px-4 py-2 rounded-md hover:bg-green-100 transition-colors text-left"
+              onClick={() => setShowAddStore(true)}
+            >
+              Add Store
             </button>
             <button className="w-full bg-yellow-50 text-yellow-700 px-4 py-2 rounded-md hover:bg-yellow-100 transition-colors text-left">
               Approve Stores
@@ -241,7 +268,21 @@ const SystemAdminDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+    {showAddUser && (
+      <AddUserModal
+        isOpen={showAddUser}
+        onClose={() => setShowAddUser(false)}
+        onUserAdded={() => setShowAddUser(false)}
+      />
+    )}
+    {showAddStore && (
+      <AddStoreModal
+        isOpen={showAddStore}
+        onClose={() => setShowAddStore(false)}
+        onStoreAdded={() => setShowAddStore(false)}
+      />
+    )}
+  </div>
   );
 };
 
