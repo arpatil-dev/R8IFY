@@ -42,6 +42,8 @@ model Store {
   ownerId   String
   owner     User      @relation("StoreOwner", fields: [ownerId], references: [id])
   ratings   Rating[]
+
+  avgRating Float     @default(0)
 }
 
 model Rating {
