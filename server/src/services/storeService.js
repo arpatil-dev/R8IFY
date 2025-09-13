@@ -65,7 +65,7 @@ export const getStoresByOwner = async (ownerId) => {
         select: { id: true, name: true, email: true },
       },
       ratings: {
-        select: { value: true },
+        select: { value: true, user:true},
       },
     },
   });

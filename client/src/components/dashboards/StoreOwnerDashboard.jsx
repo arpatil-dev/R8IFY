@@ -1,13 +1,33 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../utils/api';
+
 
 const StoreOwnerDashboard = () => {
   const [user, setUser] = useState(null);
+  const [ownedStores, setOwnedStores] = useState([]);
+  const [loadingStores, setLoadingStores] = useState(false);
+  const [errorStores, setErrorStores] = useState(null);
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      // Fetch stores owned by this user
+      if (parsedUser.role === 'STORE_OWNER') {
+        setLoadingStores(true);
+        api.get(`/stores/owner/${parsedUser.id}`)
+          .then(res => {
+            console.log(res.data.data[0]);
+            setOwnedStores(res.data.data || []);
+            setErrorStores(null);
+          })
+          .catch(err => {
+            setErrorStores(err.response?.data?.message || 'Failed to fetch stores');
+          })
+          .finally(() => setLoadingStores(false));
+      }
     }
   }, []);
 
@@ -44,75 +64,50 @@ const StoreOwnerDashboard = () => {
         </div>
       )}
 
-      {/* Store Management Cards */}
+
+      {/* Store Analytics Cards - Dynamic for each owned store */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Store Analytics */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg className="h-8 w-8 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
-              </svg>
+        {loadingStores ? (
+          <div className="col-span-4 text-center py-8">Loading stores...</div>
+        ) : errorStores ? (
+          <div className="col-span-4 text-center text-red-500 py-8">{errorStores}</div>
+        ) : ownedStores.length === 0 ? (
+          <div className="col-span-4 text-center py-8">No stores found for this owner.</div>
+        ) : (
+          ownedStores.map(store => (
+            <div key={store.id} className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{store.name}</h3>
+              <div className="mb-2 text-sm text-gray-500">{store.email}</div>
+              <div className="mb-2 text-sm text-gray-500">{store.address}</div>
+              <div className="flex items-center mb-2">
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full mr-2">Active</span>
+              </div>
+              <div className="flex items-center space-x-4 mb-4">
+                <div>
+                  <span className="block text-xs text-gray-500">Reviews</span>
+                  <span className="text-lg font-bold text-yellow-600">{store.ratings?.length || 0}</span>
+                </div>
+                <div>
+                  <span className="block text-xs text-gray-500">Avg Rating</span>
+                  <span className="text-lg font-bold text-green-600">{
+                    store.ratings && store.ratings.length > 0
+                      ? (store.ratings.reduce((acc, r) => acc + r.value, 0) / store.ratings.length).toFixed(2)
+                      : '0.00'
+                  }</span>
+                </div>
+              </div>
+              {/* Link to ratings page */}
+              <div className="mt-4">
+                <Link
+                  to="/store-ratings"
+                  className="text-blue-600 hover:underline text-sm font-medium"
+                >
+                  View users who rated this store
+                </Link>
+              </div>
             </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Total Views</dt>
-                <dd className="text-lg font-medium text-gray-900">0</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-
-        {/* Store Reviews */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg className="h-8 w-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-              </svg>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Reviews</dt>
-                <dd className="text-lg font-medium text-gray-900">0</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-
-        {/* Average Rating */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg className="h-8 w-8 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Avg Rating</dt>
-                <dd className="text-lg font-medium text-gray-900">0.0</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-
-        {/* Store Status */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg className="h-8 w-8 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Store Status</dt>
-                <dd className="text-lg font-medium text-green-600">Active</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
+          ))
+        )}
       </div>
 
       {/* Quick Actions */}

@@ -59,6 +59,7 @@ export const getStoresByOwner = async (req, res) => {
     }
 
     const stores = await storeService.getStoresByOwner(ownerId);
+    console.log("Stores for owner:", stores); // Debugging line
     return handleResponse(res, stores, "Owner's stores retrieved successfully", 200, null);
   } catch (error) {
     return handleResponse(res, null, error.message || "Failed to fetch owner's stores", 500, "Server Error");

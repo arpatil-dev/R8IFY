@@ -7,6 +7,7 @@ import Dashboard from './Pages/Dashboard'
 import Profile from './Pages/Profile'
 import MyRatings from './Pages/MyRatings'
 import ProtectedRoute from './components/ProtectedRoute'
+import StoreRatingsPage from './Pages/StoreRatingsPage'
 
 function App() {
   return (
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyRatings />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/store-ratings" 
+            element={
+              <ProtectedRoute>
+                <StoreRatingsPage />
               </ProtectedRoute>
             } 
           />
