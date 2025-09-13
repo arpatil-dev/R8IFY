@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AddUserModal from '../admin/AddUserModal';
 import AddStoreModal from '../admin/AddStoreModal';
+import UserListAdmin from '../admin/UserListAdmin';
+import StoreListAdmin from '../admin/StoreListAdmin';
 import api from '../../utils/api';
 
 const SystemAdminDashboard = () => {
@@ -246,28 +248,9 @@ const SystemAdminDashboard = () => {
         </div>
       </div>
 
-      {/* Quick System Actions */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
-        </div>
-        <div className="px-6 py-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-              System Backup
-            </button>
-            <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
-              Generate Report
-            </button>
-            <button className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition-colors">
-              Maintenance Mode
-            </button>
-            <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
-              Emergency Actions
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* User and Store Lists */}
+      <UserListAdmin />
+      <StoreListAdmin />
     {showAddUser && (
       <AddUserModal
         isOpen={showAddUser}
