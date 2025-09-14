@@ -200,80 +200,144 @@ const MyRatings = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {ratings.map((rating) => (
-              <div key={rating.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
-                {/* Store Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                      {rating.store?.name || `Store ID: ${rating.storeId}`}
-                    </h3>
-                    {rating.store?.address && (
-                      <div className="flex items-center text-gray-500 text-sm">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span className="truncate">{rating.store.address}</span>
-                      </div>
-                    )}
-                  </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                    {formatDate(rating.createdAt)}
-                  </span>
-                </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <table className="w-full text-sm">
+                <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-700">Store</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-700">Date</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-700">Rating</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-700">Comment</th>
+                    <th className="px-6 py-4 text-center font-semibold text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ratings.map((rating) => (
+                    <tr key={rating.id} className="border-b border-gray-100 last:border-none hover:bg-blue-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-medium text-gray-900">
+                            {rating.store?.name || `Store ID: ${rating.storeId}`}
+                          </span>
+                          {rating.store?.address && (
+                            <span className="text-sm text-gray-500 truncate max-w-xs">
+                              {rating.store.address}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600">
+                        {formatDate(rating.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          {renderStars(rating.value || rating.rating)}
+                          <span className="ml-2 font-semibold text-gray-900">
+                            {rating.value || rating.rating}.0
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        {rating.comment ? (
+                          <div className="max-w-xs">
+                            <p className="text-gray-700 truncate" title={rating.comment}>
+                              "{rating.comment}"
+                            </p>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 italic">No comment</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => openEditModal(rating)}
+                            className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRating(rating.id)}
+                            className="flex items-center gap-1 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm font-medium"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-                {/* Rating Display */}
-                <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-4 mb-4">
-                  <div className="flex items-center justify-between">
+            {/* Mobile Card View */}
+            <div className="md:hidden">
+              {ratings.map((rating) => (
+                <div key={rating.id} className="border-b border-gray-100 last:border-none p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900 mb-1">
+                        {rating.store?.name || `Store ID: ${rating.storeId}`}
+                      </h3>
+                      {rating.store?.address && (
+                        <p className="text-sm text-gray-500 truncate">
+                          {rating.store.address}
+                        </p>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {formatDate(rating.createdAt)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
                       {renderStars(rating.value || rating.rating)}
-                      <span className="ml-3 text-lg font-semibold text-gray-900">
+                      <span className="ml-2 font-semibold text-gray-900">
                         {rating.value || rating.rating}.0
                       </span>
                     </div>
-                    <div className="text-sm text-gray-600">
-                      Your rating
-                    </div>
                   </div>
-                </div>
 
-                {/* Comment */}
-                {rating.comment && (
-                  <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="flex items-start">
-                      <svg className="w-5 h-5 text-gray-400 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                  {rating.comment && (
+                    <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                      <p className="text-sm text-gray-700 italic">
+                        "{rating.comment}"
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => openEditModal(rating)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
-                      <p className="text-gray-700 italic leading-relaxed">"{rating.comment}"</p>
-                    </div>
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRating(rating.id)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border-2 border-blue-600 text-blue-600 text-sm font-medium rounded-lg hover:bg-blue-600 hover:text-white transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
                   </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => openEditModal(rating)}
-                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    Edit Rating
-                  </button>
-                  <button
-                    onClick={() => handleDeleteRating(rating.id)}
-                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-red-600 text-white text-sm font-medium rounded-xl hover:bg-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Delete
-                  </button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
