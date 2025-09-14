@@ -41,32 +41,30 @@ const NormalUserDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/*Hero Section*/}
         <div className="mb-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-gray-900">
-                  Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
-                </h1>
-                <p className="text-gray-600 text-lg">
-                  Discover amazing stores and share your experiences
-                </p>
-              </div>
-              <div className="mt-6 md:mt-0">
-                <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1 font-medium tracking-wide">Your Role</div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {user?.role
-                        ? user.role
-                          .replace(/_/g, ' ')
-                          .replace(/\b\w/g, c => c.toUpperCase())
-                        : 'Normal User'}
-                    </div>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-gray-900">
+                Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Discover amazing stores and share your experiences
+              </p>
+            </div>
+            <div className="mt-6 md:mt-0">
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 mb-1 font-medium tracking-wide">Your Role</div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {user?.role
+                      ? user.role
+                        .replace(/_/g, ' ')
+                        .replace(/\b\w/g, c => c.toUpperCase())
+                      : 'Normal User'}
                   </div>
                 </div>
               </div>

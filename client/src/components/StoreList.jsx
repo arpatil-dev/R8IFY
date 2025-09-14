@@ -248,7 +248,7 @@ const StoreList = () => {
       ) : (
         <>
           {/* Desktop View - Full Cards */}
-          <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="hidden md:grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             {filteredStores.map((store) => (
               <div key={store.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 overflow-hidden flex flex-col h-full">
                 {/* Card Header */}
