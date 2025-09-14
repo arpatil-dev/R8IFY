@@ -13,6 +13,7 @@ const NormalUserDashboard = () => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       const parsedUser = JSON.parse(userData);
+      console.log("Parsed user data in NormalUserDashboard:", parsedUser.role);
       setUser(parsedUser);
       
       // Fetch user's ratings count
@@ -37,7 +38,7 @@ const NormalUserDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
+        /* Hero Section */
         <div className="mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl shadow-lg p-8 text-white">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -50,16 +51,29 @@ const NormalUserDashboard = () => {
                 </p>
               </div>
               <div className="mt-6 md:mt-0">
-                <div className="bg-white bg-opacity-20 backdrop-blur rounded-xl p-4">
-                  <div className="text-sm text-blue-100 mb-1">Your Role</div>
-                  <div className="text-xl font-semibold">{user?.role?.replace('_', ' ') || 'Normal User'}</div>
+                <div className="flex items-center gap-3 bg-blue-600 bg-opacity-30 backdrop-blur-lg rounded-xl p-4 shadow-lg border border-blue-400">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 bg-opacity-70">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xs text-blue-100 mb-1 font-medium tracking-wide">Your Role</div>
+                    <div className="text-lg font-bold text-white drop-shadow-sm">
+                      {user?.role
+                        ? user.role
+                          .replace(/_/g, ' ')
+                          .replace(/\b\w/g, c => c.toUpperCase())
+                        : 'Normal User'}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Quick Actions Grid */}
+        {/* Quick Actions Grid */}}}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
