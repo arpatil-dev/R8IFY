@@ -184,15 +184,17 @@ const StoreList = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <span
+        <svg
           key={i}
-          className={`cursor-${interactive ? 'pointer' : 'default'} text-2xl ${
+          className={`w-5 h-5 cursor-${interactive ? 'pointer' : 'default'} ${
             i <= rating ? 'text-yellow-400' : 'text-gray-300'
-          }`}
+          } transition-colors duration-200`}
+          fill="currentColor"
+          viewBox="0 0 24 24"
           onClick={interactive ? () => onStarClick(i) : undefined}
         >
-          ★
-        </span>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
       );
     }
     return stars;
@@ -258,9 +260,9 @@ const StoreList = () => {
                       <h4 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
                         {store.name || 'Unnamed Store'}
                       </h4>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                      {/* <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                         ID: {store.id}
-                      </span>
+                      </span> */}
                     </div>
                   </div>
 
@@ -414,7 +416,7 @@ const StoreList = () => {
                       <h3 className="text-base font-semibold text-gray-900 truncate">
                         {store.name || 'Unnamed Store'}
                       </h3>
-                      <div className="flex items-center mt-1">
+                      <div className="flex items-center">
                         <div className="flex mr-2">
                           {renderStars(Math.round(store.averageRating || 0))}
                         </div>
@@ -553,27 +555,21 @@ const StoreList = () => {
             )}
             
             <form onSubmit={submitRating}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
                   Your Rating
                 </label>
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center gap-1 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   {renderStars(rating, true, setRating)}
                 </div>
+                {rating > 0 && (
+                  <p className="text-center text-sm text-gray-600 mt-2">
+                    {rating} out of 5 stars
+                  </p>
+                )}
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Comment (Optional)
-                </label>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  rows="3"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Share your experience..."
-                />
-              </div>
+              
 
               <div className="flex space-x-3">
                 <button

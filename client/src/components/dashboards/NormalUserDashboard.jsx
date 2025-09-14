@@ -14,7 +14,7 @@ const NormalUserDashboard = () => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       const parsedUser = JSON.parse(userData);
-      console.log("Parsed user data in NormalUserDashboard:", parsedUser.role);
+      console.log("Parsed user data in NormalUserDashboard:", parsedUser);
       setUser(parsedUser);
       
       // Fetch user's ratings count
@@ -43,9 +43,16 @@ const NormalUserDashboard = () => {
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-gray-900">
-                Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                  Welcome back, {user?.name?.split(' ')[0] || 'User'}!
+                </h1>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm mt-1">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+              </div>
               <p className="text-gray-600 text-lg">
                 Discover amazing stores and share your experiences
               </p>
@@ -87,8 +94,8 @@ const NormalUserDashboard = () => {
                       <p className="text-sm text-gray-600 mb-1">Quick Access</p>
                       <p className="text-lg font-semibold text-gray-900">My Ratings</p>
                     </div>
-                    <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-200">
+                      <svg className="w-6 h-6 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
                     </div>
@@ -105,8 +112,8 @@ const NormalUserDashboard = () => {
                     className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                        <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
                       </div>
@@ -174,15 +181,16 @@ const NormalUserDashboard = () => {
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Member Since</p>
                       <p className="text-lg font-semibold text-gray-900">
+                        {console.log("ForData ",user?.createdAt)}
                         {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
                           month: 'short', 
                           year: 'numeric' 
                         }) : 'Recently'}
                       </p>
                     </div>
-                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 0V3M3 7h18l-1.5 9a2 2 0 01-2 2H6.5a2 2 0 01-2-2L3 7z" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-200">
+                      <svg className="w-6 h-6 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 20" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3a4 4 0 018 0v4m-4 0v4m0-4H8m8 0h4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7h4z" />
                       </svg>
                     </div>
                   </div>
@@ -192,12 +200,8 @@ const NormalUserDashboard = () => {
           </div>
         </div>
 
-        {/* Store Directory Section */}
+        {/* Stores Section */}
         <div>
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Store Directory</h2>
-            <p className="text-gray-600">Discover local stores and read reviews from other customers</p>
-          </div>
           <StoreList />
         </div>
       </div>

@@ -8,7 +8,6 @@ const MyRatings = () => {
   const [error, setError] = useState('');
   const [selectedRating, setSelectedRating] = useState(null);
   const [editRating, setEditRating] = useState(0);
-  const [editComment, setEditComment] = useState('');
   const [updateLoading, setUpdateLoading] = useState(false);
 
   useEffect(() => {
@@ -41,13 +40,11 @@ const MyRatings = () => {
   const openEditModal = (rating) => {
     setSelectedRating(rating);
     setEditRating(rating.value || rating.rating);
-    setEditComment(rating.comment || '');
   };
 
   const closeEditModal = () => {
     setSelectedRating(null);
     setEditRating(0);
-    setEditComment('');
   };
 
   const handleUpdateRating = async (e) => {
@@ -57,8 +54,7 @@ const MyRatings = () => {
     try {
       setUpdateLoading(true);
       const response = await api.put(`/ratings/${selectedRating.id}`, {
-        rating: editRating,
-        comment: editComment.trim()
+        rating: editRating
       });
       
       console.log('Rating updated:', response);
@@ -209,7 +205,6 @@ const MyRatings = () => {
                     <th className="px-6 py-4 text-left font-semibold text-gray-700">Store</th>
                     <th className="px-6 py-4 text-left font-semibold text-gray-700">Date</th>
                     <th className="px-6 py-4 text-left font-semibold text-gray-700">Rating</th>
-                    <th className="px-6 py-4 text-left font-semibold text-gray-700">Comment</th>
                     <th className="px-6 py-4 text-center font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
@@ -238,17 +233,6 @@ const MyRatings = () => {
                             {rating.value || rating.rating}.0
                           </span>
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        {rating.comment ? (
-                          <div className="max-w-xs">
-                            <p className="text-gray-700 truncate" title={rating.comment}>
-                              "{rating.comment}"
-                            </p>
-                          </div>
-                        ) : (
-                          <span className="text-gray-400 italic">No comment</span>
-                        )}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-center gap-2">
@@ -306,14 +290,6 @@ const MyRatings = () => {
                       </span>
                     </div>
                   </div>
-
-                  {rating.comment && (
-                    <div className="mb-3 p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700 italic">
-                        "{rating.comment}"
-                      </p>
-                    </div>
-                  )}
 
                   <div className="flex gap-2">
                     <button
@@ -379,19 +355,6 @@ const MyRatings = () => {
                       {editRating} star{editRating > 1 ? 's' : ''} selected
                     </p>
                   )}
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    Comment (Optional)
-                  </label>
-                  <textarea
-                    value={editComment}
-                    onChange={(e) => setEditComment(e.target.value)}
-                    rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder="Share your experience with this store..."
-                  />
                 </div>
 
                 <div className="flex gap-3">
