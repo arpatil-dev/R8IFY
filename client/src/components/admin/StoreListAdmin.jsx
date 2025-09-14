@@ -148,7 +148,7 @@ const StoreListAdmin = () => {
                 <td className="px-4 py-3 text-gray-700">{store.owner?.name || '-'}</td>
                 <td className="px-4 py-3 text-yellow-600 font-bold">{typeof store.avgRating === 'number' ? store.avgRating.toFixed(2) : '-'}</td>
                 <td className="px-4 py-3 text-right flex gap-2 justify-end">
-                  <button className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-lg shadow hover:bg-green-200 transition" onClick={() => handleEdit(store.id)}>
+                  <button className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg shadow hover:bg-blue-200 transition" onClick={() => handleEdit(store.id)}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-2.828.707.707-2.828a4 4 0 01.828-1.414z" /></svg>
                     Edit
                   </button>
