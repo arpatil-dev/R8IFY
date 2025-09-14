@@ -108,7 +108,7 @@ const Layout = ({ children }) => {
                     </button>
                   </div>
                 ) : (
-                  !isAuthPage && (
+                  !isAuthPage && location.pathname !== '/' && (
                     <Link
                       to="/auth"
                       className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-xl text-sm font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md"
@@ -146,7 +146,7 @@ const Layout = ({ children }) => {
                       </svg>
                     </button>
                   ) : (
-                    !isAuthPage && (
+                    !isAuthPage && location.pathname !== '/' && (
                       <Link
                         to="/auth"
                         className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm"

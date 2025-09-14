@@ -51,7 +51,7 @@ const EditStoreModal = ({ isOpen, onClose, store, onStoreUpdated }) => {
           {error && <div className="text-red-500 text-xs">{error}</div>}
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">{loading ? 'Saving...' : 'Save'}</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:text-blue-700 transition">{loading ? 'Saving...' : 'Save'}</button>
           </div>
         </form>
       </div>
