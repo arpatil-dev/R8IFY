@@ -17,6 +17,7 @@ export const registerUserService = async (userData) => {
       name: userData.name,
       address: userData.address,
       role: userData.role || "NORMAL_USER",
+      isFirstLogin: false,
     },
   });
 };
