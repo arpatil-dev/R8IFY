@@ -33,19 +33,19 @@ const SelectOwnerModal = ({ isOpen, onClose, onOwnerSelected }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Select Store Owner</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 w-full max-w-sm border border-gray-100">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Store Owner</h2>
         {loading ? (
-          <div>Loading...</div>
+          <div className="text-center text-gray-500 py-4">Loading...</div>
         ) : error ? (
-          <div className="text-red-500">{error}</div>
+          <div className="text-red-500 text-xs py-2">{error}</div>
         ) : (
           <div>
             <select
               value={selectedOwnerId}
               onChange={e => setSelectedOwnerId(e.target.value)}
-              className="w-full border rounded px-3 py-2 mb-4"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 text-sm mb-4"
             >
               <option value="">Select an owner</option>
               {owners.map(owner => (
@@ -54,9 +54,22 @@ const SelectOwnerModal = ({ isOpen, onClose, onOwnerSelected }) => {
                 </option>
               ))}
             </select>
-            <div className="flex justify-end space-x-2">
-              <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-              <button type="button" onClick={handleSelect} disabled={!selectedOwnerId} className="px-4 py-2 bg-blue-600 text-white rounded">Select</button>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm order-2 sm:order-1"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSelect}
+                disabled={!selectedOwnerId}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition text-sm order-1 sm:order-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Select
+              </button>
             </div>
           </div>
         )}

@@ -327,7 +327,7 @@ const Layout = ({ children }) => {
             <div className="border-t border-gray-200 mt-8 pt-6 text-center">
              
                 <div className="text-center text-gray-500 text-sm">
-                  © 2025 R8IFY. All rights reserved. Made with ❤️ for the community.
+                  © 2025 R8IFY. All rights reserved.
                 </div>
                
               
