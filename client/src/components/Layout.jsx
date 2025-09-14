@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 const Layout = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,20 +49,21 @@ const Layout = ({ children }) => {
       {!isAuthPage && (
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              {/* Logo */}
+            {/* Desktop Navigation */}
+            <div className="hidden md:grid md:grid-cols-3 md:items-center h-16">
+              {/* Logo - Left */}
               <div className="flex items-center">
                 <Link to="/" className="text-2xl font-bold text-blue-600">
                   R8IFY
                 </Link>
               </div>
 
-              {/* Navigation Menu */}
+              {/* Navigation Menu - Center */}
               {isAuthenticated && user && (
-                <nav className="hidden md:flex space-x-6">
+                <nav className="flex justify-center space-x-8">
                   <Link
                     to="/dashboard"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       location.pathname === '/dashboard'
                         ? 'bg-blue-100 text-blue-700'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
@@ -72,7 +74,7 @@ const Layout = ({ children }) => {
                   
                   <Link
                     to="/profile"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       location.pathname === '/profile'
                         ? 'bg-blue-100 text-blue-700'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
@@ -83,17 +85,17 @@ const Layout = ({ children }) => {
                 </nav>
               )}
 
-              {/* User Menu */}
-              <div className="flex items-center space-x-4">
+              {/* User Menu - Right */}
+              <div className="flex items-center justify-end">
                 {isAuthenticated && user ? (
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-4">
                     <div className="text-sm">
                       <span className="text-gray-700">Welcome, </span>
                       <span className="font-medium text-gray-900">{user.name}</span>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-sm"
                     >
                       Logout
                     </button>
@@ -102,13 +104,96 @@ const Layout = ({ children }) => {
                   !isAuthPage && (
                     <Link
                       to="/auth"
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
                     >
                       Sign In
                     </Link>
                   )
                 )}
               </div>
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="md:hidden">
+              <div className="flex justify-between items-center h-16">
+                {/* Logo */}
+                <div className="flex items-center">
+                  <Link to="/" className="text-xl font-bold text-blue-600">
+                    R8IFY
+                  </Link>
+                </div>
+
+                {/* Mobile Menu Button */}
+                {isAuthenticated && user && (
+                  <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {isMobileMenuOpen ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      )}
+                    </svg>
+                  </button>
+                )}
+
+                {/* Mobile User Info */}
+                {isAuthenticated && user ? (
+                  <div className="flex items-center space-x-3">
+                    <div className="text-sm">
+                      <span className="font-medium text-gray-900">{user.name}</span>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-700 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  !isAuthPage && (
+                    <Link
+                      to="/auth"
+                      className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                  )
+                )}
+              </div>
+
+              {/* Mobile Menu Dropdown */}
+              {isAuthenticated && user && isMobileMenuOpen && (
+                <div className="border-t border-gray-200 py-3">
+                  <nav className="flex flex-col space-y-2">
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                        location.pathname === '/dashboard'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      Dashboard
+                    </Link>
+                    
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                        location.pathname === '/profile'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      Profile
+                    </Link>
+                  </nav>
+                </div>
+              )}
             </div>
           </div>
         </header>
