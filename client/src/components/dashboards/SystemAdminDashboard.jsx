@@ -54,7 +54,7 @@ const SystemAdminDashboard = () => {
             <div className="text-lg font-semibold text-gray-900">{user.name}</div>
             <div className="text-sm text-gray-500">{user.email}</div>
             <span className="inline-block mt-2 px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-medium">{user.role}</span>
-          </div>
+                      </div>
           <div className="flex flex-col items-end">
             <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs font-medium">Full System Access</span>
           </div>
