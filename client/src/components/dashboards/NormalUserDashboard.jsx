@@ -38,7 +38,7 @@ const NormalUserDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        /* Hero Section */
+        {/*Hero Section*/}
         <div className="mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl shadow-lg p-8 text-white">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -73,7 +73,7 @@ const NormalUserDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions Grid */}}}
+        {/* Quick Actions Grid */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,7 +154,7 @@ const NormalUserDashboard = () => {
         </div>
 
         {/* Store Directory Section */}
-        <div id="stores" className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Store Directory</h2>
             <p className="text-gray-600">Discover local stores and read reviews from other customers</p>
@@ -162,7 +162,7 @@ const NormalUserDashboard = () => {
           <StoreList />
         </div>
       </div>
-    </div>
+    
   );
 };
 
