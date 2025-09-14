@@ -58,68 +58,94 @@ const StoreOwnerDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-lg p-8 text-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-                  Welcome back, {user?.name?.split(' ')[0] || 'Store Owner'}! 🏪
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                  Welcome back, {user?.name?.split(' ')[0] || 'Store Owner'}!
                 </h1>
-                <p className="text-purple-100 text-lg">
-                  Manage your stores and track customer feedback
-                </p>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm mt-1">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
               </div>
-              <div className="mt-6 md:mt-0">
-                <div className="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm">
-                  <div className="text-sm text-purple-100 mb-1">Total Stores</div>
-                  <div className="text-2xl font-bold">{storeStats.totalStores}</div>
+              <p className="text-gray-600 text-lg">
+                Manage your stores and track customer feedback
+              </p>
+            </div>
+            <div className="mt-6 md:mt-0">
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 mb-1 font-medium tracking-wide">Total Stores</div>
+                  <div className="text-lg font-bold text-gray-900">{storeStats.totalStores}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions & Store Analytics */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* View Ratings */}
-            <Link to="/store-ratings" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow block">
-              <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Store Ratings</h3>
-              <p className="text-gray-600 text-sm mb-4">View and manage customer reviews</p>
-              <span className="text-amber-600 font-medium text-sm hover:text-amber-700">
-                View All →
-              </span>
-            </Link>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions & Analytics</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column - Store Ratings & Average Rating */}
+            <div className="space-y-3">
+              {/* Store Ratings - Quick Action */}
+              <Link to="/store-ratings" className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow block">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Store Ratings</p>
+                    <p className="text-sm font-semibold text-gray-900 mb-1">Manage Reviews</p>
+                    <p className="text-blue-600 font-medium text-xs hover:text-blue-700">
+                      View All →
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
 
-            {/* Profile Management */}
-            <Link to="/profile" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow block">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+              {/* Average Rating */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Average Rating</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      {loadingStores ? (
+                        <span className="animate-pulse">...</span>
+                      ) : (
+                        `${storeStats.averageRating}/5`
+                      )}
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Profile Settings</h3>
-              <p className="text-gray-600 text-sm mb-4">Update your account information</p>
-              <span className="text-blue-600 font-medium text-sm hover:text-blue-700">
-                Manage →
-              </span>
-            </Link>
-          </div>
-        </div>
+            </div>
 
-        {/* Store Analytics */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Store Analytics</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Total Reviews */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
+            {/* Right Column - Total Reviews & Member Since */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Total Reviews */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="text-center mt-5">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl mx-auto mb-3 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
                   <p className="text-sm text-gray-600 mb-1">Total Reviews</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {loadingStores ? (
@@ -129,39 +155,16 @@ const StoreOwnerDashboard = () => {
                     )}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
               </div>
-            </div>
 
-            {/* Average Rating */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Average Rating</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {loadingStores ? (
-                      <span className="animate-pulse">...</span>
-                    ) : (
-                      `${storeStats.averageRating}/5`
-                    )}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Member Since */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
+              {/* Member Since */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="text-center mt-5">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-3 flex items-center justify-center shadow-sm transform hover:scale-105 transition-transform duration-200">
+                    <svg className="w-6 h-6 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 20" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3a4 4 0 018 0v4m-4 0v4m0-4H8m8 0h4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7h4z" />
+                    </svg>
+                  </div>
                   <p className="text-sm text-gray-600 mb-1">Member Since</p>
                   <p className="text-lg font-semibold text-gray-900">
                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
@@ -169,11 +172,6 @@ const StoreOwnerDashboard = () => {
                       year: 'numeric' 
                     }) : 'Recently'}
                   </p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h-8zM8 7v8a1 1 0 001 1h6a1 1 0 001-1V7H8z" />
-                  </svg>
                 </div>
               </div>
             </div>
@@ -186,7 +184,7 @@ const StoreOwnerDashboard = () => {
           {loadingStores ? (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
               <p className="text-gray-600 text-lg">Loading your stores...</p>
             </div>
@@ -201,15 +199,15 @@ const StoreOwnerDashboard = () => {
               <p className="text-red-600 mb-4">{errorStores}</p>
               <button 
                 onClick={() => fetchStoreData(user?.id)}
-                className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Try Again
               </button>
             </div>
           ) : ownedStores.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center">
-                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
@@ -261,7 +259,7 @@ const StoreOwnerDashboard = () => {
                     </div>
 
                     {/* Rating Stats */}
-                    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4 mb-4">
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 mb-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <div className="flex mr-3">
@@ -269,7 +267,7 @@ const StoreOwnerDashboard = () => {
                               <svg
                                 key={star}
                                 className={`w-4 h-4 ${
-                                  star <= Math.round(avgRating) ? 'text-amber-400' : 'text-gray-300'
+                                  star <= Math.round(avgRating) ? 'text-blue-500' : 'text-gray-300'
                                 }`}
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
@@ -292,7 +290,7 @@ const StoreOwnerDashboard = () => {
                     {/* Action Button */}
                     <Link
                       to="/store-ratings"
-                      className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
+                      className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

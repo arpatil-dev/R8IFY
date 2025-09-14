@@ -250,27 +250,27 @@ const StoreList = () => {
       ) : (
         <>
           {/* Desktop View - Full Cards */}
-          <div className="hidden md:grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {filteredStores.map((store) => (
-              <div key={store.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 overflow-hidden flex flex-col h-full">
-                {/* Card Header */}
-                <div className="p-4 pb-3 flex-grow">
-                  <div className="flex items-start justify-between mb-2">
+          <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredStores.map((store) => {
+              const avgRating = store.averageRating || 0;
+              
+              return (
+                <div key={store.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                  {/* Store Header */}
+                  <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h4 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
-                        {store.name || 'Unnamed Store'}
-                      </h4>
-                      {/* <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                        ID: {store.id}
-                      </span> */}
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">{store.name || 'Unnamed Store'}</h3>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                      </span>
                     </div>
                   </div>
 
-                  {/* Store Details - Compact */}
-                  <div className="space-y-1 mb-3 min-h-[48px]">
+                  {/* Store Details */}
+                  <div className="space-y-2 mb-4">
                     {store.address && (
-                      <div className="flex items-center text-gray-600 text-xs">
-                        <svg className="w-3 h-3 mr-1.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex items-center text-gray-600 text-sm">
+                        <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
@@ -278,18 +278,9 @@ const StoreList = () => {
                       </div>
                     )}
                     
-                    {store.phone && (
-                      <div className="flex items-center text-gray-600 text-xs">
-                        <svg className="w-3 h-3 mr-1.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <span className="truncate">{store.phone}</span>
-                      </div>
-                    )}
-                    
                     {store.email && (
-                      <div className="flex items-center text-gray-600 text-xs">
-                        <svg className="w-3 h-3 mr-1.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex items-center text-gray-600 text-sm">
+                        <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                         <span className="truncate">{store.email}</span>
@@ -297,104 +288,48 @@ const StoreList = () => {
                     )}
                   </div>
 
-                  {/* Rating Section - Compact */}
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 mb-3 min-h-[56px] flex items-center">
-                    <div className="flex items-center justify-between w-full">
+                  {/* Rating Stats */}
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 mb-4">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className="flex mr-2">
-                          {renderStars(Math.round(store.averageRating || 0))}
+                        <div className="flex mr-3">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <svg
+                              key={star}
+                              className={`w-4 h-4 ${
+                                star <= Math.round(avgRating) ? 'text-blue-500' : 'text-gray-300'
+                              }`}
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                          ))}
                         </div>
-                        <div className="text-xs">
-                          <span className="font-semibold text-blue-900">
-                            {store.averageRating > 0 
-                              ? store.averageRating.toFixed(1)
-                              : '0.0'
-                            }
-                          </span>
-                          <span className="text-blue-700 ml-1">avg</span>
+                        <div className="text-sm">
+                          <span className="font-semibold text-gray-900">{avgRating.toFixed(1)}</span>
+                          <span className="text-gray-600 ml-1">average</span>
                         </div>
                       </div>
-                      {store.totalRatings > 0 ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white text-blue-700 shadow-sm border border-blue-200">
-                          {store.totalRatings}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
-                          0
-                        </span>
-                      )}
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-gray-600 shadow-sm">
+                        {store.totalRatings || 0} review{(store.totalRatings || 0) !== 1 ? 's' : ''}
+                      </span>
                     </div>
                   </div>
 
-                  {/* User's Rating Status - Compact */}
-                  <div className="min-h-[52px] mb-3">
-                    {userRatings[store.id] ? (
-                      <div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg p-2.5 border border-blue-200 h-full">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="w-4 h-4 bg-blue-200 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
-                              <svg className="w-2.5 h-2.5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs font-medium text-blue-900">Your Rating</p>
-                              <div className="flex items-center mt-0.5">
-                                <div className="flex mr-1.5">
-                                  {renderStars(userRatings[store.id].value || userRatings[store.id].rating)}
-                                </div>
-                                <span className="text-xs font-semibold text-blue-800">
-                                  {userRatings[store.id].value || userRatings[store.id].rating}/5
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-2.5 border border-blue-100 h-full flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-1">
-                            <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          </div>
-                          <p className="text-xs text-blue-600 font-medium">Not rated</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Card Footer - Compact */}
-                <div className="px-4 pb-4 mt-auto">
+                  {/* Action Button */}
                   <button
                     onClick={() => openRatingModal(store)}
-                    className={`w-full py-2.5 px-3 rounded-lg font-medium text-sm transition-all duration-200 transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
-                      userRatings[store.id]
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-blue-300 shadow-md hover:shadow-lg'
-                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 focus:ring-blue-300 shadow-md hover:shadow-lg'
-                    }`}
+                    className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                   >
-                    {userRatings[store.id] ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Edit Rating
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center">
-                        <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        Rate Store
-                      </span>
-                    )}
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    {userRatings[store.id] ? 'Edit Rating' : 'Rate Store'}
                   </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Mobile View - Compact/Expandable Cards */}

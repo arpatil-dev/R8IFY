@@ -31,7 +31,7 @@ const StoreRatingsPage = () => {
       const response = await api.get(`/stores/owner/${userId}`);
       const stores = response.data.data || [];
       setOwnedStores(stores);
-      
+      console.log("Stores Data: ", stores);
       // Calculate overall statistics
       const allRatings = stores.flatMap(store => store.ratings || []);
       const total = allRatings.length;
@@ -208,7 +208,7 @@ const StoreRatingsPage = () => {
                           <div key={idx} className="bg-gray-50 rounded-xl p-4 sm:p-6 hover:bg-gray-100 transition-colors">
                             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0 mb-4">
                               <div className="flex items-center">
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg mr-3 sm:mr-4 flex-shrink-0">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg mr-3 sm:mr-4 flex-shrink-0">
                                   {rating.user?.name?.charAt(0).toUpperCase() || 'U'}
                                 </div>
                                 <div className="min-w-0 flex-1">
