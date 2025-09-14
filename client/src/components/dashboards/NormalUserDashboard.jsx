@@ -1,144 +1,152 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import PasswordChange from '../PasswordChange';
 import StoreList from '../StoreList';
+import api from '../../utils/api';
 
 const NormalUserDashboard = () => {
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [totalRatings, setTotalRatings] = useState(0);
+  const [loadingRatings, setLoadingRatings] = useState(true);
 
   useEffect(() => {
     // Get user data from localStorage
     const userData = localStorage.getItem('userData');
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      
+      // Fetch user's ratings count
+      fetchUserRatings(parsedUser.id);
     }
   }, []);
 
-  const tabs = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'stores', label: 'Browse Stores', icon: '🏪' },
-    { id: 'password', label: 'Change Password', icon: '🔒' },
-  ];
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return (
-          <div className="space-y-6">
-            {/* Profile Card */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Name</p>
-                  <p className="font-semibold">{user?.name || 'N/A'}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Email</p>
-                  <p className="font-semibold">{user?.email || 'N/A'}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Role</p>
-                  <p className="font-semibold">{user?.role || 'NORMAL_USER'}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">User ID</p>
-                  <p className="font-semibold">{user?.id || 'N/A'}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button
-                  onClick={() => setActiveTab('stores')}
-                  className="p-4 text-center bg-blue-50 hover:bg-blue-100 rounded-lg transition duration-200"
-                >
-                  <div className="text-2xl mb-2">🏪</div>
-                  <div className="font-semibold text-blue-900">Browse Stores</div>
-                  <div className="text-sm text-blue-600">Find and rate stores</div>
-                </button>
-                
-                <button
-                  onClick={() => setActiveTab('password')}
-                  className="p-4 text-center bg-green-50 hover:bg-green-100 rounded-lg transition duration-200"
-                >
-                  <div className="text-2xl mb-2">🔒</div>
-                  <div className="font-semibold text-green-900">Change Password</div>
-                  <div className="text-sm text-green-600">Update your password</div>
-                </button>
-
-                <Link
-                  to="/my-ratings"
-                  className="p-4 text-center bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200 block"
-                >
-                  <div className="text-2xl mb-2">⭐</div>
-                  <div className="font-semibold text-purple-900">My Ratings</div>
-                  <div className="text-sm text-purple-600">View all your reviews</div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Welcome Message */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-6 text-white">
-              <h3 className="text-xl font-semibold mb-2">Welcome to R8IFY! 🎉</h3>
-              <p className="text-blue-100">
-                Discover amazing stores, share your experiences, and help others make informed decisions.
-                Start by browsing our store directory and leaving your first rating!
-              </p>
-            </div>
-          </div>
-        );
-      
-      case 'stores':
-        return <StoreList />;
-      
-      case 'password':
-        return <PasswordChange />;
-      
-      default:
-        return null;
+  const fetchUserRatings = async (userId) => {
+    try {
+      setLoadingRatings(true);
+      const response = await api.get(`/ratings/user/${userId}`);
+      const ratingsData = response.data?.data || response.data || [];
+      setTotalRatings(Array.isArray(ratingsData) ? ratingsData.length : 0);
+    } catch (error) {
+      console.error('Error fetching user ratings:', error);
+      setTotalRatings(0);
+    } finally {
+      setLoadingRatings(false);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Welcome back, {user?.name || 'User'}!
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Manage your account and explore stores
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl shadow-lg p-8 text-white">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-bold mb-2">
+                  Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
+                </h1>
+                <p className="text-blue-100 text-lg">
+                  Discover amazing stores and share your experiences
+                </p>
+              </div>
+              <div className="mt-6 md:mt-0">
+                <div className="bg-white bg-opacity-20 backdrop-blur rounded-xl p-4">
+                  <div className="text-sm text-blue-100 mb-1">Your Role</div>
+                  <div className="text-xl font-semibold">{user?.role?.replace('_', ' ') || 'Normal User'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {/* Tab Navigation */}
-      <div className="mb-6">
-        <nav className="flex space-x-8 border-b border-gray-200">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm transition duration-200 ${
-                activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-      </div>
+        {/* Quick Actions Grid */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Browse Stores */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Browse Stores</h3>
+              <p className="text-gray-600 text-sm mb-4">Discover and explore local stores</p>
+              <a href="#stores" className="text-blue-600 font-medium text-sm hover:text-blue-700">
+                View All →
+              </a>
+            </div>
 
-      {/* Tab Content */}
-      <div>
-        {renderTabContent()}
+            {/* My Ratings */}
+            <Link to="/my-ratings" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow block">
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">My Ratings</h3>
+              <p className="text-gray-600 text-sm mb-4">View and manage your reviews</p>
+              <span className="text-yellow-600 font-medium text-sm hover:text-yellow-700">
+                View All →
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Recent Activity & Stats */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Activity</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Stats Cards */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total Ratings</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {loadingRatings ? (
+                      <span className="animate-pulse">...</span>
+                    ) : (
+                      totalRatings
+                    )}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Member Since</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      year: 'numeric' 
+                    }) : 'Recently'}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 0V3M3 7h18l-1.5 9a2 2 0 01-2 2H6.5a2 2 0 01-2-2L3 7z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Store Directory Section */}
+        <div id="stores" className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Store Directory</h2>
+            <p className="text-gray-600">Discover local stores and read reviews from other customers</p>
+          </div>
+          <StoreList />
+        </div>
       </div>
     </div>
   );
