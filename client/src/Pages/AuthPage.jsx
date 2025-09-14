@@ -18,7 +18,7 @@ const AuthPage = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
-            Welcome to R8IFY
+            Welcome to <span className='text-blue-600'>R8</span>IFY
           </h1>
           <p className="text-gray-600">
             {isLoginMode ? 'Sign in to your account' : 'Create a new account'}

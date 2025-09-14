@@ -54,7 +54,7 @@ const Layout = ({ children }) => {
               {/* Logo - Left */}
               <div className="flex items-center">
                 <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
-                  R8ify
+                  R8IFY
                 </Link>
               </div>
 
@@ -324,23 +324,13 @@ const Layout = ({ children }) => {
             </div>
 
             {/* Bottom Section */}
-            <div className="border-t border-gray-200 mt-8 pt-6">
-              <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                <div className="text-center md:text-left text-gray-500 text-sm">
+            <div className="border-t border-gray-200 mt-8 pt-6 text-center">
+             
+                <div className="text-center text-gray-500 text-sm">
                   © 2025 R8IFY. All rights reserved. Made with ❤️ for the community.
                 </div>
-                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
-                  <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors duration-200 text-center">
-                    Privacy Policy
-                  </a>
-                  <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors duration-200 text-center">
-                    Terms of Service
-                  </a>
-                  <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors duration-200 text-center">
-                    Support
-                  </a>
-                </div>
-              </div>
+               
+              
             </div>
           </div>
         </footer>
