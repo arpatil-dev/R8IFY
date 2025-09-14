@@ -43,9 +43,9 @@ const SystemAdminDashboard = () => {
     // Fetch recent activity data
     setLoadingActivity(true);
     Promise.all([
-      api.get('/ratings/recent?limit=4'),
-      api.get('/users/recent?limit=4'),
-      api.get('/stores/recent?limit=4')
+      api.get('/ratings/recent?limit=2'),
+      api.get('/users/recent?limit=2'),
+      api.get('/stores/recent?limit=2')
     ])
       .then(([ratingsRes, usersRes, storesRes]) => {
         console.log('Recent activity responses:', { 
@@ -243,128 +243,136 @@ const SystemAdminDashboard = () => {
           </div>
         </div>
 
-        {/* System Overview Cards */}
+        {/* System Overview and Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">System Overview</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Total Users */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Users</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {loadingStats ? (
-                      <span className="animate-pulse">...</span>
-                    ) : errorStats ? (
-                      <span className="text-red-500">!</span>
-                    ) : (
-                      stats.usersCount
-                    )}
-                  </p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">System Overview & Actions</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* Left Column: All Statistics */}
+            <div className="lg:col-span-1">
+              <div className="space-y-3">
+                {/* Total Users */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1">Total Users</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {loadingStats ? (
+                          <span className="animate-pulse">...</span>
+                        ) : errorStats ? (
+                          <span className="text-red-500">!</span>
+                        ) : (
+                          stats.usersCount
+                        )}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
+
+                {/* Total Stores */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1">Total Stores</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {loadingStats ? (
+                          <span className="animate-pulse">...</span>
+                        ) : errorStats ? (
+                          <span className="text-red-500">!</span>
+                        ) : (
+                          stats.storesCount
+                        )}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Total Ratings */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1">Total Ratings</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {loadingStats ? (
+                          <span className="animate-pulse">...</span>
+                        ) : errorStats ? (
+                          <span className="text-red-500">!</span>
+                        ) : (
+                          stats.ratingsCount
+                        )}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Total Stores */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Stores</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {loadingStats ? (
-                      <span className="animate-pulse">...</span>
-                    ) : errorStats ? (
-                      <span className="text-red-500">!</span>
-                    ) : (
-                      stats.storesCount
-                    )}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+            {/* Right Column: Quick Actions */}
+            <div className="lg:col-span-1">
+              <div className="space-y-3 h-full flex flex-col">
+                {/* Add User */}
+                <button 
+                  onClick={() => setShowAddUser(true)}
+                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">User Management</p>
+                      <p className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        Add New User
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">Create new platform accounts</p>
+                    </div>
+                    <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                      </svg>
+                    </div>
+                  </div>
+                </button>
 
-            {/* Total Ratings */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Ratings</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {loadingStats ? (
-                      <span className="animate-pulse">...</span>
-                    ) : errorStats ? (
-                      <span className="text-red-500">!</span>
-                    ) : (
-                      stats.ratingsCount
-                    )}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                </div>
+                {/* Add Store */}
+                <button 
+                  onClick={() => setShowAddStore(true)}
+                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Store Management</p>
+                      <p className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        Add New Store
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">Register new business stores</p>
+                    </div>
+                    <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
+            
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Add User */}
-            <button 
-              onClick={() => setShowAddUser(true)}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">User Management</p>
-                  <p className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    Add New User
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                  </svg>
-                </div>
-              </div>
-            </button>
-
-            {/* Add Store */}
-            <button 
-              onClick={() => setShowAddStore(true)}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Store Management</p>
-                  <p className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    Add New Store
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Recent Ratings */}
+        {/* Recent Activity */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
