@@ -42,6 +42,7 @@ export async function getProfileService(userId) {
       email: true,
       role: true,
       createdAt: true,
+      address:true,
     },
   });
 

@@ -35,6 +35,7 @@ const Profile = () => {
       
       const userData = response.data?.data || response.data;
       setUser(userData);
+      console.log("User Data",userData)
       setFormData({
         name: userData.name || '',
         email: userData.email || '',
@@ -93,10 +94,11 @@ const Profile = () => {
         address: formData.address.trim(),
       });
       
-      console.log('Profile update response:', response);
+      console.log('Profile update response:', response.data.data);
       
       const updatedUser = response.data?.data || response.data;
       setUser(updatedUser);
+      console.log(updatedUser.address);
       
       // Update localStorage to keep it in sync
       localStorage.setItem('userData', JSON.stringify(updatedUser));
@@ -212,258 +214,257 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-        <p className="text-gray-600 mt-2">Manage your account information</p>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+          <p className="text-gray-600 mt-2">Manage your account information</p>
+        </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900">Account Information</h2>
-            {!isEditing ? (
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-                >
-                  Edit Profile
-                </button>
-                <button
-                  onClick={() => setShowChangePasswordModal(true)}
-                  className="bg-gray-100 text-blue-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-200 border border-gray-200 transition-colors"
-                >
-                  Change Password
-                </button>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+          <div className="px-6 py-5 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900">Account Information</h2>
+              {!isEditing ? (
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                  >
+                    Edit Profile
+                  </button>
+                  <button
+                    onClick={() => setShowChangePasswordModal(true)}
+                    className="bg-gray-100 text-blue-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-200 border border-gray-200 transition-colors"
+                  >
+                    Change Password
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                  >
+                    {loading ? 'Saving...' : 'Save'}
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    disabled={loading}
+                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Error and Success Messages */}
+          {error && (
+            <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+              <div className="flex">
+                <svg className="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                {error}
               </div>
-            ) : (
-              <div className="space-x-2">
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {loading ? 'Saving...' : 'Save'}
-                </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={loading}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Cancel
-                </button>
+            </div>
+          )}
+          
+          {success && (
+            <div className="mx-6 mt-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+              <div className="flex">
+                <svg className="w-5 h-5 text-green-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                {success}
               </div>
-            )}
+            </div>
+          )}
+
+          <div className="px-6 py-8">
+            <div className="space-y-8">
+              {/* Personal Information Section */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-6">Personal Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Name <span className="text-red-500">*</span>
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+                        placeholder="Enter your name"
+                      />
+                    ) : (
+                      <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 min-h-[48px] flex items-center">
+                        {user.name || 'Not provided'}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+                        placeholder="Enter your email"
+                      />
+                    ) : (
+                      <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 min-h-[48px] flex items-center">
+                        {user.email || 'Not provided'}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Address
+                  </label>
+                  {isEditing ? (
+                    <textarea
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors resize-none"
+                      placeholder="Enter your address (optional)"
+                    />
+                  ) : (
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 min-h-[84px] flex items-start">
+                      <span className="whitespace-pre-wrap">{user.address || 'Not provided'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Account Details Section */}
+              <div className="pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900 mb-6">Account Details</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Role
+                    </label>
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg min-h-[48px] flex items-center">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        {user.role}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Member Since
+                    </label>
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 min-h-[48px] flex items-center">
+                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Error and Success Messages */}
-        {error && (
-          <div className="mx-6 mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
-          </div>
-        )}
-        
-        {success && (
-          <div className="mx-6 mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-            {success}
-          </div>
-        )}
-
-        <div className="px-6 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your name"
-                />
-              ) : (
-                <p className="text-gray-900 py-2">{user.name || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
-              </label>
-              {isEditing ? (
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your email"
-                />
-              ) : (
-                <p className="text-gray-900 py-2">{user.email || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
-              </label>
-              {isEditing ? (
-                <textarea
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  rows="3"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
-                  placeholder="Enter your address (optional)"
-                />
-              ) : (
-                <p className="text-gray-900 py-2">{user.address || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Role
-              </label>
-              <p className="text-gray-900 py-2">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {user.role}
-                </span>
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Member Since
-              </label>
-              <p className="text-gray-900 py-2">
-                {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-              </p>
-            </div>
-          </div>
+        <div className="mt-8 flex justify-start">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Dashboard
+          </Link>
         </div>
-      </div>
 
-      <div className="mt-6 flex flex-col gap-4">
-        
-        <Link
-          to="/dashboard"
-          className="inline-flex items-center text-blue-600 hover:text-blue-500"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Dashboard
-        </Link>
-      </div>
-
-      {/* Change Password Modal */}
-      {showChangePasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Change Password</h3>
-                <button
-                  onClick={handleClosePasswordModal}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Error and Success Messages */}
-            {passwordError && (
-              <div className="mx-6 mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {passwordError}
-              </div>
-            )}
-            
-            {passwordSuccess && (
-              <div className="mx-6 mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-                {passwordSuccess}
-              </div>
-            )}
-
-            <div className="px-6 py-4">
+        {/* Change Password Modal */}
+        {showChangePasswordModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
+              
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Current Password <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Current Password</label>
                   <input
                     type="password"
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     placeholder="Enter your current password"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    New Password <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">New Password</label>
                   <input
                     type="password"
                     name="newPassword"
                     value={passwordData.newPassword}
                     onChange={handlePasswordInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     placeholder="Enter your new password"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirm New Password <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Confirm New Password</label>
                   <input
                     type="password"
                     name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     placeholder="Confirm your new password"
                   />
                 </div>
+                
+                {passwordError && <div className="text-red-500 text-xs">{passwordError}</div>}
+                {passwordSuccess && <div className="text-green-500 text-xs">{passwordSuccess}</div>}
+                
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={handleClosePasswordModal}
+                    disabled={passwordLoading}
+                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleChangePassword}
+                    disabled={passwordLoading}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+                  >
+                    {passwordLoading ? 'Changing...' : 'Change Password'}
+                  </button>
+                </div>
               </div>
             </div>
-
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-              <button
-                onClick={handleClosePasswordModal}
-                disabled={passwordLoading}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleChangePassword}
-                disabled={passwordLoading}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {passwordLoading ? 'Changing...' : 'Change Password'}
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
