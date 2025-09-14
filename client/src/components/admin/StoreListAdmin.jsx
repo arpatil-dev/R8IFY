@@ -83,24 +83,45 @@ const StoreListAdmin = () => {
             className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-200"
           />
         </div>
-        {/* ...existing sort controls... */}
-        <select
-          value={sortBy}
-          onChange={e => setSortBy(e.target.value)}
-          className="border rounded px-3 py-2"
-        >
-          <option value="name">Sort by Name</option>
-          <option value="owner">Sort by Owner</option>
-          <option value="rating">Sort by Rating</option>
-        </select>
-        <select
-          value={sortOrder}
-          onChange={e => setSortOrder(e.target.value)}
-          className="border rounded px-3 py-2"
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+        
+        {/* Modern Sort Controls */}
+        <div className="flex gap-3 min-w-fit">
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2H10a2 2 0 01-2-2v0z" />
+            </svg>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="appearance-none bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-8 py-[11px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 hover:bg-gray-100 transition-colors cursor-pointer min-w-[140px]"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="owner">Sort by Owner</option>
+              <option value="rating">Sort by Rating</option>
+            </select>
+            <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+            </svg>
+            <select
+              value={sortOrder}
+              onChange={e => setSortOrder(e.target.value)}
+              className="appearance-none bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-8 py-[11px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 hover:bg-gray-100 transition-colors cursor-pointer min-w-[120px]"
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+            <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
       {loading ? (
         <div className="text-center py-4 text-gray-400">Loading...</div>
@@ -120,7 +141,7 @@ const StoreListAdmin = () => {
           </thead>
           <tbody>
             {sortedStores.map(store => (
-              <tr key={store.id} className="border-b last:border-none hover:bg-green-50 transition rounded-xl">
+              <tr key={store.id} className="border-b border-slate-200 last:border-none hover:bg-green-50 transition rounded-xl">
                 <td className="px-4 py-3 font-medium text-gray-900">{store.name}</td>
                 <td className="px-4 py-3 text-gray-700">{store.email}</td>
                 <td className="px-4 py-3 text-gray-700">{store.address}</td>
