@@ -14,12 +14,21 @@ const SystemAdminDashboard = () => {
   const [loadingStats, setLoadingStats] = useState(true);
   const [errorStats, setErrorStats] = useState(null);
   const [recentRatings, setRecentRatings] = useState([]);
+  const [recentUsers, setRecentUsers] = useState([]);
+  const [recentStores, setRecentStores] = useState([]);
+  const [loadingActivity, setLoadingActivity] = useState(true);
+  const [expandedSections, setExpandedSections] = useState({
+    ratings: false,
+    users: false,
+    stores: false
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       setUser(JSON.parse(userData));
     }
+    
     // Fetch dashboard stats
     api.get('/admin/stats')
       .then(res => {
@@ -31,15 +40,166 @@ const SystemAdminDashboard = () => {
       })
       .finally(() => setLoadingStats(false));
 
-    // Fetch recent ratings (latest 3)
-    api.get('/ratings/recent?limit=3')
-      .then(res => {
-        setRecentRatings(res.data.data || []);
+    // Fetch recent activity data
+    setLoadingActivity(true);
+    Promise.all([
+      api.get('/ratings/recent?limit=4'),
+      api.get('/users/recent?limit=4'),
+      api.get('/stores/recent?limit=4')
+    ])
+      .then(([ratingsRes, usersRes, storesRes]) => {
+        console.log('Recent activity responses:', { 
+          ratings: ratingsRes.data, 
+          users: usersRes.data, 
+          stores: storesRes.data 
+        });
+        setRecentRatings(ratingsRes.data.data || []);
+        setRecentUsers(usersRes.data.data || []);
+        setRecentStores(storesRes.data.data || []);
       })
       .catch(err => {
+        console.error('Failed to fetch recent activity:', err);
         setRecentRatings([]);
-      });
+        setRecentUsers([]);
+        setRecentStores([]);
+      })
+      .finally(() => setLoadingActivity(false));
   }, []);
+
+  // Create unified timeline sorted by date
+  const createUnifiedTimeline = () => {
+    const allActivities = [
+      ...recentRatings.map(item => ({ ...item, type: 'rating', createdAt: item.createdAt })),
+      ...recentUsers.map(item => ({ ...item, type: 'user', createdAt: item.createdAt })),
+      ...recentStores.map(item => ({ ...item, type: 'store', createdAt: item.createdAt }))
+    ];
+    
+    return allActivities
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 8); // Show latest 8 activities in mixed view
+  };
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const unifiedTimeline = createUnifiedTimeline();
+
+  // Render individual activity item based on type
+  const renderActivityItem = (activity, idx) => {
+    const key = `${activity.type}-${activity.id || idx}`;
+    
+    if (activity.type === 'rating') {
+      return (
+        <div key={key} className="flex items-center justify-between p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {activity.user?.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span className="font-semibold text-gray-900">{activity.user?.name || 'Unknown User'}</span>
+                <span className="text-sm text-gray-500">rated</span>
+                <span className="font-semibold text-gray-900">{activity.store?.name || 'Unknown Store'}</span>
+              </div>
+              {activity.comment && (
+                <p className="text-sm text-gray-600 italic mt-1">"{activity.comment}"</p>
+              )}
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs text-gray-500">{new Date(activity.createdAt).toLocaleDateString()}</span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-500">{new Date(activity.createdAt).toLocaleTimeString()}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-lg shadow-sm">
+            <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <span className="font-bold text-gray-900">{activity.value || activity.rating}</span>
+            <span className="text-xs text-gray-500">/5</span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (activity.type === 'user') {
+      return (
+        <div key={key} className="flex items-center justify-between p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {activity.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <span className="font-semibold text-gray-900">{activity.name}</span>
+                <span className="text-sm text-gray-500">joined the platform</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                  {activity.role.replace('_', ' ').toLowerCase()}
+                </span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-500">{new Date(activity.createdAt).toLocaleDateString()}</span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-500">{new Date(activity.createdAt).toLocaleTimeString()}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
+            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span className="text-sm font-medium text-gray-700">New User</span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (activity.type === 'store') {
+      return (
+        <div key={key} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {activity.name?.charAt(0).toUpperCase() || 'S'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <span className="font-semibold text-gray-900">{activity.name}</span>
+                <span className="text-sm text-gray-500">was added to the platform</span>
+              </div>
+              {activity.description && (
+                <p className="text-sm text-gray-600 mt-1">{activity.description.slice(0, 100)}{activity.description.length > 100 ? '...' : ''}</p>
+              )}
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs text-gray-500">Added on {new Date(activity.createdAt).toLocaleDateString()}</span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-500">{new Date(activity.createdAt).toLocaleTimeString()}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
+            <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span className="text-sm font-medium text-gray-700">New Store</span>
+          </div>
+        </div>
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -206,49 +366,191 @@ const SystemAdminDashboard = () => {
 
         {/* Recent Ratings */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Activity</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500">Latest updates across the platform</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleSection('ratings')}
+                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                    expandedSections.ratings 
+                      ? 'bg-amber-100 text-amber-800' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Ratings ({recentRatings.length})
+                </button>
+                <button
+                  onClick={() => toggleSection('users')}
+                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                    expandedSections.users 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Users ({recentUsers.length})
+                </button>
+                <button
+                  onClick={() => toggleSection('stores')}
+                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                    expandedSections.stores 
+                      ? 'bg-blue-100 text-blue-800' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Stores ({recentStores.length})
+                </button>
+              </div>
+            </div>
+          </div>
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            {recentRatings.length > 0 ? (
-              <div className="space-y-4">
-                {recentRatings.map((rating, idx) => (
-                  <div key={rating.id || idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        {rating.user?.name?.charAt(0).toUpperCase() || 'U'}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-900">{rating.user?.name || 'Unknown User'}</span>
-                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                          <span className="font-semibold text-gray-900">{rating.store?.name || 'Unknown Store'}</span>
-                        </div>
-                        {rating.comment && (
-                          <p className="text-sm text-gray-600 italic mt-1">"{rating.comment}"</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
-                        <span className="font-bold text-gray-900">{rating.value || rating.rating}</span>
-                      </div>
-                      <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                ))}
+            {loadingActivity ? (
+              <div className="text-center py-8">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                </div>
+                <p className="text-gray-500">Loading recent activity...</p>
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500">No recent activity found</p>
+              <div className="space-y-4">
+                {/* Recent Ratings */}
+                {recentRatings.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                      <h3 className="font-medium text-gray-900">Recent Ratings</h3>
+                    </div>
+                    {recentRatings.map((rating, idx) => (
+                      <div key={`rating-${rating.id || idx}`} className="flex items-center justify-between p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {rating.user?.name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900">{rating.user?.name || 'Unknown User'}</span>
+                              <span className="text-sm text-gray-500">rated</span>
+                              <span className="font-semibold text-gray-900">{rating.store?.name || 'Unknown Store'}</span>
+                            </div>
+                            {rating.comment && (
+                              <p className="text-sm text-gray-600 italic mt-1">"{rating.comment}"</p>
+                            )}
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleDateString()}</span>
+                              <span className="text-xs text-gray-400">•</span>
+                              <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleTimeString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-lg shadow-sm">
+                          <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                          <span className="font-bold text-gray-900">{rating.value || rating.rating}</span>
+                          <span className="text-xs text-gray-500">/5</span>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Recent Users */}
+                {recentUsers.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-2 mb-3 mt-6">
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                      </svg>
+                      <h3 className="font-medium text-gray-900">New User Registrations</h3>
+                    </div>
+                    {recentUsers.map((user, idx) => (
+                      <div key={`user-${user.id || idx}`} className="flex items-center justify-between p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {user.name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900">{user.name}</span>
+                              <span className="text-sm text-gray-500">joined the platform</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                {user.role.replace('_', ' ').toLowerCase()}
+                              </span>
+                              <span className="text-xs text-gray-400">•</span>
+                              <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</span>
+                              <span className="text-xs text-gray-400">•</span>
+                              <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleTimeString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
+                          <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          <span className="text-sm font-medium text-gray-700">New User</span>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Recent Stores */}
+                {recentStores.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-2 mb-3 mt-6">
+                      <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      <h3 className="font-medium text-gray-900">New Store Listings</h3>
+                    </div>
+                    {recentStores.map((store, idx) => (
+                      <div key={`store-${store.id || idx}`} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {store.name?.charAt(0).toUpperCase() || 'S'}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900">{store.name}</span>
+                              <span className="text-sm text-gray-500">was added to the platform</span>
+                            </div>
+                            {store.description && (
+                              <p className="text-sm text-gray-600 mt-1">{store.description.slice(0, 100)}{store.description.length > 100 ? '...' : ''}</p>
+                            )}
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-gray-500">Added on {new Date(store.createdAt).toLocaleDateString()}</span>
+                              <span className="text-xs text-gray-400">•</span>
+                              <span className="text-xs text-gray-500">{new Date(store.createdAt).toLocaleTimeString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
+                          <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          <span className="text-sm font-medium text-gray-700">New Store</span>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* No Activity Message */}
+                {recentRatings.length === 0 && recentUsers.length === 0 && recentStores.length === 0 && (
+                  <div className="text-center py-8">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
+                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500">No recent activity to display</p>
+                  </div>
+                )}
               </div>
             )}
           </div>

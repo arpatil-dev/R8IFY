@@ -163,3 +163,21 @@ export const getUserByIdService = async (userId) => {
   }
   return user;
 };
+
+// ✅ Get recent users (newly registered)
+export const getRecentUsers = async (limit = 3) => {
+  // Ensure limit is between 1 and 10 for safety
+  const safeLimit = Math.max(1, Math.min(limit, 10));
+  
+  return await prisma.user.findMany({
+    take: safeLimit,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+};

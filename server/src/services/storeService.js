@@ -295,3 +295,19 @@ export const getAverageRating = async (storeId) => {
     totalRatings: result._count.value || 0,
   };
 };
+
+// ✅ Get recent stores (newly created)
+export const getRecentStores = async (limit = 3) => {
+  // Ensure limit is between 1 and 10 for safety
+  const safeLimit = Math.max(1, Math.min(limit, 10));
+  
+  return await prisma.store.findMany({
+    take: safeLimit,
+    include: {
+      owner: {
+        select: { id: true, name: true, email: true }
+      }
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+};

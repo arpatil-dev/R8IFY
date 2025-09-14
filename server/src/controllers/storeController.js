@@ -209,3 +209,20 @@ export const addOwnerToStore = async (req, res) => {
   }
 };
 
+// ✅ Get recent stores (newly created)
+export const getRecentStores = async (req, res) => {
+  try {
+    const { limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit, 10) : 3;
+
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
+      return handleResponse(res, null, "Limit must be a positive number", 400, "Validation Error");
+    }
+
+    const stores = await storeService.getRecentStores(parsedLimit);
+    return handleResponse(res, stores, "Recent stores retrieved successfully", 200, null);
+  } catch (error) {
+    return handleResponse(res, null, error.message || "Failed to fetch recent stores", 500, "Server Error");
+  }
+};
+

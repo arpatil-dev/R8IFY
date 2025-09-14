@@ -12,10 +12,14 @@ import {
   updateRating,
   deleteRating,
   getAverageRating,
-  addOwnerToStore
+  addOwnerToStore,
+  getRecentStores
 } from "../controllers/storeController.js";
 
 const router = express.Router();
+
+// Get recent stores (must be before /:storeId routes)
+router.get('/recent', authenticate, authorize(['SYSTEM_ADMINISTRATOR']), getRecentStores);
 
 router.post('/', authenticate, authorize(['SYSTEM_ADMINISTRATOR']), createStore);
 router.get('/', authenticate, authorize(['SYSTEM_ADMINISTRATOR','NORMAL_USER']), getAllStores);
@@ -27,8 +31,6 @@ router.delete('/:storeId', authenticate, authorize(['SYSTEM_ADMINISTRATOR']), de
 router.post('/:storeId/ratings', authenticate, authorize(['NORMAL_USER']), submitRating);
 router.get('/:storeId/ratings', authenticate, authorize(['SYSTEM_ADMINISTRATOR','STORE_OWNER']), getRatingsForStore);
 router.get('/:storeId/average-rating', authenticate, authorize(['SYSTEM_ADMINISTRATOR','STORE_OWNER','NORMAL_USER']), getAverageRating);
-
-
 
 
 export default router;

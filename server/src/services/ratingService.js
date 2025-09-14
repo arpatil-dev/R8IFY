@@ -57,3 +57,30 @@ export const getRatingsByUser = async (userId) => {
     orderBy: { createdAt: 'desc' }
   });
 };
+
+// ✅ Get all ratings in the system
+export const getAllRatings = async () => {
+  return await prisma.rating.findMany({
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      store: { select: { id: true, name: true, address: true, email: true } }
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+};
+
+// ✅ Get recent ratings (latest 3-4 ratings)
+export const getRecentRatings = async (limit = 3) => {
+  // Ensure limit is between 1 and 10 for safety
+  const safeLimit = Math.max(1, Math.min(limit, 10));
+  
+  return await prisma.rating.findMany({
+    take: safeLimit,
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      store: { select: { id: true, name: true, address: true, email: true } }
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+};
+

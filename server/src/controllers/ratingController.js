@@ -55,3 +55,30 @@ export const getRatingsByUser = async (req, res) => {
     return handleResponse(res, null, error.message || "Failed to fetch user ratings", 500, "Server Error");
   }
 };
+
+// ✅ Get all ratings in the system
+export const getAllRatings = async (req, res) => {
+  try {
+    const ratings = await ratingService.getAllRatings();
+    return handleResponse(res, ratings, "All ratings retrieved successfully", 200, null);
+  } catch (error) {
+    return handleResponse(res, null, error.message || "Failed to fetch all ratings", 500, "Server Error");
+  }
+};
+
+// ✅ Get recent ratings (latest 3-4 ratings)
+export const getRecentRatings = async (req, res) => {
+  try {
+    const { limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit, 10) : 3;
+
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
+      return handleResponse(res, null, "Limit must be a positive number", 400, "Validation Error");
+    }
+
+    const ratings = await ratingService.getRecentRatings(parsedLimit);
+    return handleResponse(res, ratings, "Recent ratings retrieved successfully", 200, null);
+  } catch (error) {
+    return handleResponse(res, null, error.message || "Failed to fetch recent ratings", 500, "Server Error");
+  }
+};

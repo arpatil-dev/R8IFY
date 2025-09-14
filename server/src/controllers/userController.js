@@ -5,7 +5,8 @@ import {
   updateUserService,
   updateProfileService,
   getUsersService,
-  getUserByIdService
+  getUserByIdService,
+  getRecentUsers
 } from "../services/userService.js";
 import { createUser as createUserService } from "../services/adminService.js";
 import handleResponse from "../utils/response.js";
@@ -199,5 +200,22 @@ export const getUserById = async (req, res) => {
       500,
       "Error"
     );
+  }
+};
+
+// ✅ Get recent users (newly registered)
+export const getRecentUsersController = async (req, res) => {
+  try {
+    const { limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit, 10) : 3;
+
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
+      return handleResponse(res, null, "Limit must be a positive number", 400, "Validation Error");
+    }
+
+    const users = await getRecentUsers(parsedLimit);
+    return handleResponse(res, users, "Recent users retrieved successfully", 200, null);
+  } catch (error) {
+    return handleResponse(res, null, error.message || "Failed to fetch recent users", 500, "Server Error");
   }
 };
