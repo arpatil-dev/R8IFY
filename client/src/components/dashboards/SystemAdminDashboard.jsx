@@ -203,36 +203,36 @@ const SystemAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Hero Section */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
                   System Admin Dashboard
                 </h1>
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm mt-1">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm flex-shrink-0">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
               </div>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                 Complete system control and management
               </p>
             </div>
             {user && (
-              <div className="mt-6 md:mt-0">
-                <div className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-full md:w-auto">
+                <div className="flex items-center gap-3 bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-100 flex-shrink-0">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-gray-900">{user.name}</div>
-                    <div className="text-xs text-gray-500">{user.email}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-gray-900 truncate">{user.name}</div>
+                    <div className="text-xs text-gray-500 truncate">{user.email}</div>
                     <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
                       {user.role}
                     </span>
@@ -244,19 +244,19 @@ const SystemAdminDashboard = () => {
         </div>
 
         {/* System Overview and Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">System Overview & Actions</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">System Overview & Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             
             {/* Left Column: All Statistics */}
-            <div className="lg:col-span-1">
+            <div className="md:col-span-1">
               <div className="space-y-3">
                 {/* Total Users */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Total Users</p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">
                         {loadingStats ? (
                           <span className="animate-pulse">...</span>
                         ) : errorStats ? (
@@ -266,8 +266,8 @@ const SystemAdminDashboard = () => {
                         )}
                       </p>
                     </div>
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                       </svg>
                     </div>
@@ -275,11 +275,11 @@ const SystemAdminDashboard = () => {
                 </div>
 
                 {/* Total Stores */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Total Stores</p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">
                         {loadingStats ? (
                           <span className="animate-pulse">...</span>
                         ) : errorStats ? (
@@ -289,8 +289,8 @@ const SystemAdminDashboard = () => {
                         )}
                       </p>
                     </div>
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
                     </div>
@@ -298,11 +298,11 @@ const SystemAdminDashboard = () => {
                 </div>
 
                 {/* Total Ratings */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Total Ratings</p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">
                         {loadingStats ? (
                           <span className="animate-pulse">...</span>
                         ) : errorStats ? (
@@ -312,8 +312,8 @@ const SystemAdminDashboard = () => {
                         )}
                       </p>
                     </div>
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
                     </div>
@@ -323,23 +323,23 @@ const SystemAdminDashboard = () => {
             </div>
 
             {/* Right Column: Quick Actions */}
-            <div className="lg:col-span-1">
+            <div className="md:col-span-1">
               <div className="space-y-3 h-full flex flex-col">
                 {/* Add User */}
                 <button 
                   onClick={() => setShowAddUser(true)}
-                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
+                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">User Management</p>
-                      <p className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">User Management</p>
+                      <p className="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                         Add New User
                       </p>
-                      <p className="text-sm text-gray-500 mt-2">Create new platform accounts</p>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2 hidden sm:block">Create new platform accounts</p>
                     </div>
-                    <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors ml-3 flex-shrink-0">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                       </svg>
                     </div>
@@ -349,18 +349,18 @@ const SystemAdminDashboard = () => {
                 {/* Add Store */}
                 <button 
                   onClick={() => setShowAddStore(true)}
-                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
+                  className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow text-left group flex-1 flex items-center"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Store Management</p>
-                      <p className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">Store Management</p>
+                      <p className="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                         Add New Store
                       </p>
-                      <p className="text-sm text-gray-500 mt-2">Register new business stores</p>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2 hidden sm:block">Register new business stores</p>
                     </div>
-                    <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors ml-3 flex-shrink-0">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                     </div>
@@ -373,15 +373,15 @@ const SystemAdminDashboard = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">Latest updates across the platform</span>
-              <div className="flex items-center gap-2">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Recent Activity</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+              <span className="text-xs sm:text-sm text-gray-500 hidden sm:inline">Latest updates across the platform</span>
+              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1">
                 <button
                   onClick={() => toggleSection('ratings')}
-                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap ${
                     expandedSections.ratings 
                       ? 'bg-amber-100 text-amber-800' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -391,7 +391,7 @@ const SystemAdminDashboard = () => {
                 </button>
                 <button
                   onClick={() => toggleSection('users')}
-                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap ${
                     expandedSections.users 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -401,7 +401,7 @@ const SystemAdminDashboard = () => {
                 </button>
                 <button
                   onClick={() => toggleSection('stores')}
-                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap ${
                     expandedSections.stores 
                       ? 'bg-blue-100 text-blue-800' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -412,7 +412,7 @@ const SystemAdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             {loadingActivity ? (
               <div className="text-center py-8">
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
@@ -421,130 +421,136 @@ const SystemAdminDashboard = () => {
                 <p className="text-gray-500">Loading recent activity...</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Recent Ratings */}
                 {recentRatings.length > 0 && (
                   <>
-                    <div className="flex items-center gap-2 mb-3">
-                      <svg className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
-                      <h3 className="font-medium text-gray-900">Recent Ratings</h3>
+                      <h3 className="text-sm sm:text-base font-medium text-gray-900">Recent Ratings</h3>
                     </div>
-                    {recentRatings.map((rating, idx) => (
-                      <div key={`rating-${rating.id || idx}`} className="flex items-center justify-between p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            {rating.user?.name?.charAt(0).toUpperCase() || 'U'}
+                    <div className="space-y-2 sm:space-y-3">
+                      {recentRatings.map((rating, idx) => (
+                        <div key={`rating-${rating.id || idx}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors gap-2 sm:gap-4">
+                          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
+                              {rating.user?.name?.charAt(0).toUpperCase() || 'U'}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{rating.user?.name || 'Unknown User'}</span>
+                                <span className="text-xs sm:text-sm text-gray-500">rated</span>
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{rating.store?.name || 'Unknown Store'}</span>
+                              </div>
+                              {rating.comment && (
+                                <p className="text-xs sm:text-sm text-gray-600 italic mt-1 line-clamp-2">"{rating.comment}"</p>
+                              )}
+                              <div className="flex items-center gap-1 sm:gap-2 mt-1">
+                                <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleDateString()}</span>
+                                <span className="text-xs text-gray-400">•</span>
+                                <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleTimeString()}</span>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900">{rating.user?.name || 'Unknown User'}</span>
-                              <span className="text-sm text-gray-500">rated</span>
-                              <span className="font-semibold text-gray-900">{rating.store?.name || 'Unknown Store'}</span>
-                            </div>
-                            {rating.comment && (
-                              <p className="text-sm text-gray-600 italic mt-1">"{rating.comment}"</p>
-                            )}
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleDateString()}</span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">{new Date(rating.createdAt).toLocaleTimeString()}</span>
-                            </div>
+                          <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-lg shadow-sm self-end sm:self-center flex-shrink-0">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                            <span className="font-bold text-gray-900 text-sm">{rating.value || rating.rating}</span>
+                            <span className="text-xs text-gray-500">/5</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-lg shadow-sm">
-                          <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                          </svg>
-                          <span className="font-bold text-gray-900">{rating.value || rating.rating}</span>
-                          <span className="text-xs text-gray-500">/5</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </>
                 )}
 
                 {/* Recent Users */}
                 {recentUsers.length > 0 && (
                   <>
-                    <div className="flex items-center gap-2 mb-3 mt-6">
-                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 mb-2 sm:mb-3 mt-4 sm:mt-6">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                       </svg>
-                      <h3 className="font-medium text-gray-900">New User Registrations</h3>
+                      <h3 className="text-sm sm:text-base font-medium text-gray-900">New User Registrations</h3>
                     </div>
-                    {recentUsers.map((user, idx) => (
-                      <div key={`user-${user.id || idx}`} className="flex items-center justify-between p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            {user.name?.charAt(0).toUpperCase() || 'U'}
+                    <div className="space-y-2 sm:space-y-3">
+                      {recentUsers.map((user, idx) => (
+                        <div key={`user-${user.id || idx}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors gap-2 sm:gap-4">
+                          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
+                              {user.name?.charAt(0).toUpperCase() || 'U'}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{user.name}</span>
+                                <span className="text-xs sm:text-sm text-gray-500">joined the platform</span>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
+                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                  {user.role.replace('_', ' ').toLowerCase()}
+                                </span>
+                                <span className="text-xs text-gray-400">•</span>
+                                <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</span>
+                                <span className="text-xs text-gray-400">•</span>
+                                <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleTimeString()}</span>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900">{user.name}</span>
-                              <span className="text-sm text-gray-500">joined the platform</span>
-                            </div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
-                                {user.role.replace('_', ' ').toLowerCase()}
-                              </span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleTimeString()}</span>
-                            </div>
+                          <div className="flex items-center gap-1 bg-white px-2 sm:px-3 py-1 rounded-lg shadow-sm self-end sm:self-center flex-shrink-0">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span className="text-xs sm:text-sm font-medium text-gray-700">New User</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
-                          <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                          <span className="text-sm font-medium text-gray-700">New User</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </>
                 )}
 
                 {/* Recent Stores */}
                 {recentStores.length > 0 && (
                   <>
-                    <div className="flex items-center gap-2 mb-3 mt-6">
-                      <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 mb-2 sm:mb-3 mt-4 sm:mt-6">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
-                      <h3 className="font-medium text-gray-900">New Store Listings</h3>
+                      <h3 className="text-sm sm:text-base font-medium text-gray-900">New Store Listings</h3>
                     </div>
-                    {recentStores.map((store, idx) => (
-                      <div key={`store-${store.id || idx}`} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            {store.name?.charAt(0).toUpperCase() || 'S'}
+                    <div className="space-y-2 sm:space-y-3">
+                      {recentStores.map((store, idx) => (
+                        <div key={`store-${store.id || idx}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors gap-2 sm:gap-4">
+                          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
+                              {store.name?.charAt(0).toUpperCase() || 'S'}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{store.name}</span>
+                                <span className="text-xs sm:text-sm text-gray-500">was added to the platform</span>
+                              </div>
+                              {store.description && (
+                                <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">{store.description.slice(0, 100)}{store.description.length > 100 ? '...' : ''}</p>
+                              )}
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
+                                <span className="text-xs text-gray-500">Added on {new Date(store.createdAt).toLocaleDateString()}</span>
+                                <span className="text-xs text-gray-400">•</span>
+                                <span className="text-xs text-gray-500">{new Date(store.createdAt).toLocaleTimeString()}</span>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900">{store.name}</span>
-                              <span className="text-sm text-gray-500">was added to the platform</span>
-                            </div>
-                            {store.description && (
-                              <p className="text-sm text-gray-600 mt-1">{store.description.slice(0, 100)}{store.description.length > 100 ? '...' : ''}</p>
-                            )}
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-gray-500">Added on {new Date(store.createdAt).toLocaleDateString()}</span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">{new Date(store.createdAt).toLocaleTimeString()}</span>
-                            </div>
+                          <div className="flex items-center gap-1 bg-white px-2 sm:px-3 py-1 rounded-lg shadow-sm self-end sm:self-center flex-shrink-0">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span className="text-xs sm:text-sm font-medium text-gray-700">New Store</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-lg shadow-sm">
-                          <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                          </svg>
-                          <span className="text-sm font-medium text-gray-700">New Store</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </>
                 )}
 
@@ -565,9 +571,13 @@ const SystemAdminDashboard = () => {
         </div>
 
         {/* Management Sections */}
-        <div className="space-y-8">
-          <UserListAdmin />
-          <StoreListAdmin />
+        <div className="space-y-6 sm:space-y-8">
+          <div className="overflow-x-auto">
+            <UserListAdmin />
+          </div>
+          <div className="overflow-x-auto">
+            <StoreListAdmin />
+          </div>
         </div>
 
         {/* Modals */}

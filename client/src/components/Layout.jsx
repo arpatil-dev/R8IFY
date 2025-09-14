@@ -53,7 +53,7 @@ const Layout = ({ children }) => {
             <div className="hidden md:grid md:grid-cols-3 md:items-center h-16">
               {/* Logo - Left */}
               <div className="flex items-center">
-                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-110 transform animate-pulse hover:animate-bounce">
+                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
                   R8ify
                 </Link>
               </div>
@@ -125,7 +125,7 @@ const Layout = ({ children }) => {
               <div className="flex justify-between items-center h-16">
                 {/* Logo - Left */}
                 <div className="flex items-center">
-                  <Link to="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:scale-110 transform animate-pulse hover:animate-bounce">
+                  <Link to="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
                     R8IFY
                   </Link>
                 </div>

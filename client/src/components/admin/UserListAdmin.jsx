@@ -131,37 +131,39 @@ const UserListAdmin = () => {
       ) : error ? (
         <div className="text-center py-4 text-red-500">{error}</div>
       ) : (
-        <table className="w-full text-sm rounded-xl overflow-hidden shadow-sm">
-          <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-            <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer">Name</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer">Email</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer">Address</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer">Role</th>
-              <th className="px-4 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedUsers.map(user => (
-              <tr key={user.id} className="border-b border-slate-200 last:border-none hover:bg-blue-50 transition rounded-xl">
-                <td className="px-4 py-3 font-medium text-gray-900">{user.name}</td>
-                <td className="px-4 py-3 text-gray-700">{user.email}</td>
-                <td className="px-4 py-3 text-gray-700">{user.address}</td>
-                <td className="px-4 py-3 text-gray-700">{user.role}</td>
-                <td className="px-4 py-3 text-right flex gap-2 justify-end">
-                  <button className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg shadow hover:bg-blue-200 transition" onClick={() => handleEdit(user.id)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-2.828.707.707-2.828a4 4 0 01.828-1.414z" /></svg>
-                    Edit
-                  </button>
-                  <button className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-lg shadow hover:bg-red-200 transition" onClick={() => handleDelete(user.id)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm rounded-xl overflow-hidden shadow-sm min-w-max">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer whitespace-nowrap">Name</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer whitespace-nowrap">Email</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer whitespace-nowrap">Address</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 cursor-pointer whitespace-nowrap">Role</th>
+                <th className="px-4 py-3 whitespace-nowrap"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sortedUsers.map(user => (
+                <tr key={user.id} className="border-b border-slate-200 last:border-none hover:bg-blue-50 transition rounded-xl">
+                  <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{user.name}</td>
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{user.email}</td>
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{user.address}</td>
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{user.role}</td>
+                  <td className="px-4 py-3 text-right flex gap-2 justify-end whitespace-nowrap">
+                    <button className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg shadow hover:bg-blue-200 transition" onClick={() => handleEdit(user.id)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-2.828.707.707-2.828a4 4 0 01.828-1.414z" /></svg>
+                      Edit
+                    </button>
+                    <button className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-lg shadow hover:bg-red-200 transition" onClick={() => handleDelete(user.id)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     {editUser && (
       <EditUserModal
