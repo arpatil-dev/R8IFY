@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import api from '../utils/api';
+import { validateForm } from '../utils/validation';
+
 const Register = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -26,6 +28,13 @@ const Register = ({ onSwitchToLogin }) => {
     setError('');
     setSuccess('');
 
+    // Validate form data
+    const isValid = validateForm(formData);
+    if (!isValid) {
+      setLoading(false);      
+      return;
+    }
+    
     try {
       const response = await api.post('/auth/register', formData);
       setSuccess('Registration successful! You can now login.');

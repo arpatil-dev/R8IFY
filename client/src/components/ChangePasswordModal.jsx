@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import api from '../utils/api';
+import { validateForm } from '../utils/validation';
 
 const ChangePasswordModal = ({ isOpen, onClose, userId, onPasswordChanged }) => {
   const [password, setPassword] = useState('');
@@ -10,6 +11,13 @@ const ChangePasswordModal = ({ isOpen, onClose, userId, onPasswordChanged }) => 
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const isValid = validateForm({ password });
+    if (!isValid) {
+      setLoading(false);
+      return;
+    }
+
     try {
       await api.put(`/users/password`, { newPassword:password });
       await api.put(`/users/${userId}`, { isFirstLogin: false });
@@ -25,7 +33,7 @@ const ChangePasswordModal = ({ isOpen, onClose, userId, onPasswordChanged }) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-200/75 bg-opacity-30 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 w-full max-w-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

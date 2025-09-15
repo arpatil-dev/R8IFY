@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '../../utils/api';
-
+import { validateForm } from '../../utils/validation';
 const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -15,6 +15,11 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
     setError(null);
     try {
         console.log({ name, email, address, role });
+        const isValid = validateForm({ name, email, address, role });
+        if (!isValid) {
+          setLoading(false);
+          return;
+        }
       const res = await api.post('/users', { name, email, address, role });
       console.log('Add user response:', res);
       onUserAdded(res.data.user);
@@ -29,7 +34,9 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-slate-200/75 flex items-center justify-center z-50">
+
+
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Add User</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

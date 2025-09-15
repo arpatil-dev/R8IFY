@@ -32,7 +32,7 @@ const EditStoreModal = ({ isOpen, onClose, store, onStoreUpdated }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-slate-200/75 bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Edit Store</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

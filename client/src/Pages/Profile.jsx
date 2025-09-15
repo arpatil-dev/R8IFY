@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
+import { validateForm } from '../utils/validation';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -88,6 +89,12 @@ const Profile = () => {
         return;
       }
 
+      const isValid = validateForm(formData);
+      if (!isValid) {
+        setLoading(false);
+        return;
+      }
+
       const response = await api.put('/users/profile', {
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -149,16 +156,23 @@ const Profile = () => {
         return;
       }
       
-      if (passwordData.newPassword.length < 6) {
-        setPasswordError('New password must be at least 6 characters long');
+      if(passwordData.newPassword === passwordData.currentPassword) {
+        setPasswordError('New password must be different from current password');
+        setPasswordLoading(false);
         return;
       }
       
       if (passwordData.newPassword !== passwordData.confirmPassword) {
         setPasswordError('New password and confirm password do not match');
+        setPasswordLoading(false);
         return;
       }
 
+      const isValid = validateForm({password:passwordData.newPassword});
+      if (!isValid) {
+        setPasswordLoading(false);
+        return;
+      }
       const response = await api.put('/users/password', {
         
         newPassword: passwordData.newPassword,
@@ -397,7 +411,7 @@ const Profile = () => {
 
         {/* Change Password Modal */}
         {showChangePasswordModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-slate-200/75 bg-opacity-30 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 w-full max-w-sm border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
               
