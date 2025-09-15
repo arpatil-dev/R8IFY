@@ -21,6 +21,7 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
           return;
         }
       const res = await api.post('/users', { name, email, address, role });
+      alert('DEFAULT PASSWORD: changeme\nPlease change it after first login.\nUser added successfully!');
       console.log('Add user response:', res);
       onUserAdded(res.data.user);
       onClose();

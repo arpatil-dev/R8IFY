@@ -96,6 +96,8 @@ RoxilarTask/
 - **Email:** roxi@gmail.com
 - **Password:** Admin@123
 
+## Admin Added Users Default Password : changeme
+
 ## Sample User Credentials
 
 - **Email:** aryanrpatil2023@gmail.com
