@@ -1,3 +1,5 @@
+## Access app directly : [https://r8ify.vercel.app/](https://r8ify.vercel.app/)
+
 # R8IFY - Ratings & Reviews Platform
 
 R8IFY is a modern web application for rating and reviewing stores and users. It features a robust admin dashboard, user management, store management, and a responsive, mobile-friendly UI. Built with React (Vite), Node.js/Express, Prisma ORM, and PostgreSQL (NeonDB).
