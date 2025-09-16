@@ -469,7 +469,7 @@ const StoreList = () => {
 
       {/* Rating Modal */}
       {selectedStore && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-slate-200/75 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <h4 className="text-lg font-semibold mb-4">
               {existingRating ? 'Edit Your Rating for' : 'Rate'} {selectedStore.name}
